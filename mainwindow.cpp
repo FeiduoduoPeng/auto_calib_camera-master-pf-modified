@@ -198,7 +198,9 @@ bool MainWindow::caculate_all_record(int img_type){
     //std::for_each(Files.begin(), Files.end(),[](std::string s){std::cout<<s<<std::endl;});
     for(auto img_file:Files){
         std::vector<cv::Point2f> ptCorners;
-        cv::Mat img = cv::imread(img_file);
+        cv::Mat img_origin = cv::imread(img_file);
+        cv::Mat img;
+        cv::transpose(img_origin, img);
         cv::findChessboardCorners(
                     img,cv::Size(
                             ui->spinBox_grid_width->value(),
@@ -504,6 +506,9 @@ void MainWindow::on_pushButton_clean_clicked()
 {
     executeCMD("rm color_image/*");
     executeCMD("rm IR_image/*");
+    executeCMD("rm ./color_image_list_file.yaml");
+    executeCMD("rm ./depth_image_list_file.yaml");
+    executeCMD("rm ./imagelist.yaml");
     QMessageBox::about(this,tr("Message"),tr("clear success"));
 }
 
