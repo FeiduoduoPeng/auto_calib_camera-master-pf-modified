@@ -1,0 +1,11 @@
+%YAML:1.0
+images:
+   - "./color_image/cImageBGR9.jpg"
+   - "./color_image/cImageBGR7.jpg"
+   - "./color_image/cImageBGR4.jpg"
+   - "./color_image/cImageBGR2.jpg"
+   - "./color_image/cImageBGR6.jpg"
+   - "./color_image/cImageBGR5.jpg"
+   - "./color_image/cImageBGR8.jpg"
+   - "./color_image/cImageBGR1.jpg"
+   - "./color_image/cImageBGR3.jpg"
