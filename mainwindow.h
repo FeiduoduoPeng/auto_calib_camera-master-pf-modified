@@ -76,6 +76,8 @@ private slots:
 
     void on_pushButton_chk_crn_distr_clicked();
 
+    void on_radioButton_IR_calib_clicked();
+
 private:
     Ui::MainWindow *ui;
     Thread thread;

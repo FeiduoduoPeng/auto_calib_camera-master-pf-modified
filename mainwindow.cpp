@@ -364,7 +364,6 @@ int MainWindow::read_all_file_name(string path,vector<string> &Files)
       DIR *dir;
       vector<string> files;
       dir=opendir(path.c_str());
-      cout << "文件列表: "<< endl;
       while((ptr=readdir(dir))!=NULL)
       {
           //跳过'.'和'..'两个目录
@@ -573,8 +572,6 @@ void MainWindow::handleTimeout()
 
         if(run_step == 0)
         {
-
-
             if(ui->tableView->model()->index(list_num,0).data().isValid()&&ui->tableView->model()->index(list_num,1).data().isValid())
             {
                 x = ui->tableView->model()->index(list_num,0).data().toFloat() ;
@@ -601,17 +598,16 @@ void MainWindow::handleTimeout()
         else if(run_step == 2)
         {
              thread.SetImageSave();
-
              run_step = 0;
         }
         else if(run_step == 3)
         {
             on_pushButton_read_image_list_clicked();
+            run_step =0;	//pf
+            list_num = 0;	//pf
             m_pTimer->stop();
             ui->pushButton_start_calib->setText(tr("start_calib"));
         }
-
-
     }
 }
 void MainWindow::on_pushButton_start_calib_clicked()
@@ -772,4 +768,9 @@ void MainWindow::on_pushButton_chk_crn_distr_clicked()
         caculate_all_record(2);
     if(ui->radioButton_select_color_calib->isChecked())
         caculate_all_record(1);
+}
+
+void MainWindow::on_radioButton_IR_calib_clicked()
+{
+
 }
