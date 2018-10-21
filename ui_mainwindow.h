@@ -158,13 +158,13 @@ public:
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         radioButton_IR = new QRadioButton(groupBox_2);
         radioButton_IR->setObjectName(QStringLiteral("radioButton_IR"));
-        radioButton_IR->setChecked(true);
+        radioButton_IR->setChecked(false);
 
         gridLayout->addWidget(radioButton_IR, 0, 0, 1, 1);
 
         radioButton_color = new QRadioButton(groupBox_2);
         radioButton_color->setObjectName(QStringLiteral("radioButton_color"));
-        radioButton_color->setChecked(false);
+        radioButton_color->setChecked(true);
 
         gridLayout->addWidget(radioButton_color, 1, 0, 1, 1);
 
@@ -194,6 +194,7 @@ public:
         gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
         radioButton_select_color_calib = new QRadioButton(groupBox_3);
         radioButton_select_color_calib->setObjectName(QStringLiteral("radioButton_select_color_calib"));
+        radioButton_select_color_calib->setChecked(true);
 
         gridLayout_3->addWidget(radioButton_select_color_calib, 0, 0, 1, 1);
 
@@ -209,7 +210,7 @@ public:
 
         radioButton_select_ir_calib = new QRadioButton(groupBox_3);
         radioButton_select_ir_calib->setObjectName(QStringLiteral("radioButton_select_ir_calib"));
-        radioButton_select_ir_calib->setChecked(true);
+        radioButton_select_ir_calib->setChecked(false);
 
         gridLayout_3->addWidget(radioButton_select_ir_calib, 1, 0, 1, 1);
 
@@ -424,48 +425,48 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
-        groupBox->setTitle(QApplication::translate("MainWindow", "serial control", 0));
+        groupBox->setTitle(QApplication::translate("MainWindow", "\344\270\262\345\217\243\350\256\276\347\275\256", 0));
         BaudBox->clear();
         BaudBox->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "115200", 0)
          << QApplication::translate("MainWindow", "57600", 0)
          << QApplication::translate("MainWindow", "9600", 0)
         );
-        pushButton_open_serial->setText(QApplication::translate("MainWindow", "open_serial", 0));
-        groupBox_2->setTitle(QApplication::translate("MainWindow", "camera control", 0));
-        radioButton_IR->setText(QApplication::translate("MainWindow", "IR_camera", 0));
-        radioButton_color->setText(QApplication::translate("MainWindow", "color_camera", 0));
-        pushButton_open_camera->setText(QApplication::translate("MainWindow", "open_camera", 0));
-        radioButton_IR_calib->setText(QApplication::translate("MainWindow", "IR_was_calib", 0));
-        radioButton_color_calib->setText(QApplication::translate("MainWindow", "color_was_calib", 0));
-        groupBox_3->setTitle(QApplication::translate("MainWindow", "image setting", 0));
-        radioButton_select_color_calib->setText(QApplication::translate("MainWindow", "calib_clolor_image", 0));
+        pushButton_open_serial->setText(QApplication::translate("MainWindow", "\346\211\223\345\274\200\344\270\262\345\217\243", 0));
+        groupBox_2->setTitle(QApplication::translate("MainWindow", "\346\230\276\347\244\272\350\256\276\347\275\256", 0));
+        radioButton_IR->setText(QApplication::translate("MainWindow", "\347\272\242\345\244\226\345\216\237\345\233\276", 0));
+        radioButton_color->setText(QApplication::translate("MainWindow", "\345\275\251\350\211\262\345\216\237\345\233\276", 0));
+        pushButton_open_camera->setText(QApplication::translate("MainWindow", "\346\211\223\345\274\200\347\233\270\346\234\272", 0));
+        radioButton_IR_calib->setText(QApplication::translate("MainWindow", "\345\267\262\346\240\241\346\255\243\347\272\242\345\244\226\345\233\276", 0));
+        radioButton_color_calib->setText(QApplication::translate("MainWindow", "\345\267\262\346\240\241\346\255\243\345\275\251\350\211\262\345\233\276", 0));
+        groupBox_3->setTitle(QApplication::translate("MainWindow", "\346\240\241\346\255\243\351\200\211\351\241\271", 0));
+        radioButton_select_color_calib->setText(QApplication::translate("MainWindow", "\346\240\241\346\255\243\345\275\251\350\211\262\345\233\276", 0));
         pushButton_start_calib->setText(QApplication::translate("MainWindow", "start_calib", 0));
-        pushButton_clean->setText(QApplication::translate("MainWindow", "clear_image", 0));
-        radioButton_select_ir_calib->setText(QApplication::translate("MainWindow", "calib_IR_image", 0));
-        pushButton_save_image->setText(QApplication::translate("MainWindow", "save_image", 0));
-        pushButton_read_image_list->setText(QApplication::translate("MainWindow", "calib_image", 0));
-        groupBox_4->setTitle(QApplication::translate("MainWindow", "camera_Pos_setting", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "add pos to list", 0));
+        pushButton_clean->setText(QApplication::translate("MainWindow", "\346\270\205\351\231\244\346\211\200\346\234\211\345\233\276\347\211\207", 0));
+        radioButton_select_ir_calib->setText(QApplication::translate("MainWindow", "\346\240\241\346\255\243\347\272\242\345\244\226\345\233\276", 0));
+        pushButton_save_image->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230\345\275\223\345\211\215\345\233\276\347\211\207", 0));
+        pushButton_read_image_list->setText(QApplication::translate("MainWindow", "\346\240\241\346\255\243\345\233\276\345\203\217", 0));
+        groupBox_4->setTitle(QApplication::translate("MainWindow", "\347\233\270\346\234\272\344\275\215\345\247\277", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "\346\267\273\345\212\240\344\275\215\345\247\277", 0));
         label->setText(QApplication::translate("MainWindow", "video", 0));
-        groupBox_5->setTitle(QApplication::translate("MainWindow", "GroupBox", 0));
-        label_2->setText(QApplication::translate("MainWindow", "pitch:", 0));
-        label_4->setText(QApplication::translate("MainWindow", "real_pos:", 0));
-        label_3->setText(QApplication::translate("MainWindow", "yaw:", 0));
-        label_5->setText(QApplication::translate("MainWindow", "set_pos:", 0));
-        groupBox_6->setTitle(QApplication::translate("MainWindow", "board_grid", 0));
-        label_6->setText(QApplication::translate("MainWindow", "width:", 0));
-        label_7->setText(QApplication::translate("MainWindow", "height", 0));
-        checkBox_show_check->setText(QApplication::translate("MainWindow", "showcheck", 0));
-        tabWidget->setTabText(tabWidget->indexOf(Tab1), QApplication::translate("MainWindow", "video", 0));
-        pushButton_save_lists->setText(QApplication::translate("MainWindow", "sava_lists", 0));
-        pushButton_read_lists->setText(QApplication::translate("MainWindow", "read_lists", 0));
-        radioButton_list1->setText(QApplication::translate("MainWindow", "list1", 0));
-        radioButton_list2->setText(QApplication::translate("MainWindow", "list2", 0));
-        radioButton_list3->setText(QApplication::translate("MainWindow", "list3", 0));
-        pushButton_clear_record->setText(QApplication::translate("MainWindow", "clear record", 0));
-        pushButton_chk_crn_distr->setText(QApplication::translate("MainWindow", "chk crn distr", 0));
-        tabWidget->setTabText(tabWidget->indexOf(Tab2), QApplication::translate("MainWindow", "PanTiltSetting", 0));
+        groupBox_5->setTitle(QApplication::translate("MainWindow", "\347\212\266\346\200\201", 0));
+        label_2->setText(QApplication::translate("MainWindow", "\344\277\257\344\273\260\350\247\222:", 0));
+        label_4->setText(QApplication::translate("MainWindow", "\345\275\223\345\211\215\344\275\215\345\247\277:", 0));
+        label_3->setText(QApplication::translate("MainWindow", "\346\250\252\346\273\232\350\247\222:", 0));
+        label_5->setText(QApplication::translate("MainWindow", "\347\233\256\346\240\207\344\275\215\345\247\277:", 0));
+        groupBox_6->setTitle(QApplication::translate("MainWindow", "\345\237\272\346\234\254\350\256\276\347\275\256:", 0));
+        label_6->setText(QApplication::translate("MainWindow", "\350\247\222\347\202\271\345\256\275\346\225\260:", 0));
+        label_7->setText(QApplication::translate("MainWindow", "\347\204\246\347\202\271\351\253\230\346\225\260:", 0));
+        checkBox_show_check->setText(QApplication::translate("MainWindow", "\345\256\236\346\227\266\350\247\222\347\202\271", 0));
+        tabWidget->setTabText(tabWidget->indexOf(Tab1), QApplication::translate("MainWindow", "\345\233\276\345\203\217", 0));
+        pushButton_save_lists->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230\345\210\227\350\241\250", 0));
+        pushButton_read_lists->setText(QApplication::translate("MainWindow", "\350\257\273\345\217\226\345\210\227\350\241\250", 0));
+        radioButton_list1->setText(QApplication::translate("MainWindow", "\345\210\227\350\241\2501", 0));
+        radioButton_list2->setText(QApplication::translate("MainWindow", "\345\210\227\350\241\2502", 0));
+        radioButton_list3->setText(QApplication::translate("MainWindow", "\345\210\227\350\241\2503", 0));
+        pushButton_clear_record->setText(QApplication::translate("MainWindow", "\346\270\205\351\231\244", 0));
+        pushButton_chk_crn_distr->setText(QApplication::translate("MainWindow", "\350\247\222\347\202\271\345\210\206\345\270\203", 0));
+        tabWidget->setTabText(tabWidget->indexOf(Tab2), QApplication::translate("MainWindow", "\350\256\276\347\275\256\344\270\216\346\243\200\346\237\245", 0));
     } // retranslateUi
 
 };

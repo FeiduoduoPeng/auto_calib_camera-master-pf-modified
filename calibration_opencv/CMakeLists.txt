@@ -10,5 +10,7 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 add_executable( cpp-example-calibration calibration.cpp )
+add_executable( test_opencv test_opencv.cpp )
 # 链接OpenCV库
 target_link_libraries( cpp-example-calibration ${OpenCV_LIBS} )
+target_link_libraries( test_opencv ${OpenCV_LIBS} )

@@ -50,7 +50,9 @@ LIBS += /usr/local/lib/libopencv_calib3d.so\
     /usr/local/lib/libopencv_stitching.so \
     /usr/local/lib/libopencv_superres.so \
     /usr/local/lib/libopencv_video.so \
-    /usr/local/lib/libopencv_videostab.so
+    /usr/local/lib/libopencv_videostab.so \
+    /usr/local/lib/libopencv_imgcodecs.so \
+
 
 
 LIBS += -L$$(OPENNI2_REDIST)

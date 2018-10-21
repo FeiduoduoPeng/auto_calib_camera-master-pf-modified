@@ -77,6 +77,20 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->tableView_2->setRowHeight(i,ui->tableView_2->height()/REC_HEIGHT-1);
     }
     ui->tableView_2->show();
+
+    /*disable some widget for easy use!*/
+    ui->Slider_x->setDisabled(true);
+    ui->Slider_y->setDisabled(true);
+    ui->pushButton->setDisabled(true);
+    ui->pushButton_save_lists->setDisabled(true);
+    ui->pushButton_read_lists->setDisabled(true);
+    ui->spinBox_grid_height->setDisabled(true);
+    ui->spinBox_grid_width->setDisabled(true);
+    ui->radioButton_color_calib->setDisabled(true);
+    ui->radioButton_IR_calib->setDisabled(true);
+    ui->radioButton_select_ir_calib->setDisabled(true);
+    ui->pushButton_save_image->setDisabled(true);
+    ui->radioButton_IR->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
@@ -566,9 +580,8 @@ void MainWindow::handleTimeout()
 {
 
     static float x,y;
-   // qDebug()<<"Enter timeout processing function\n";
-    if(m_pTimer->isActive()){
 
+    if(m_pTimer->isActive()){
 
         if(run_step == 0)
         {
@@ -590,6 +603,7 @@ void MainWindow::handleTimeout()
         }
         else if(run_step == 1)
         {
+    qDebug()<<"3 \n";
             if(abs(ui->lcdNumber_imu_x->value() - x)<1&&abs(ui->lcdnumber_imu_y->value() - y)<1)
             {
                 run_step = 2;
@@ -760,6 +774,7 @@ void MainWindow::on_pushButton_clear_record_clicked()
             model2->setItem(i,j,item);
         }
     }
+    ui->pushButton_chk_crn_distr->setDisabled(false);
 }
 
 void MainWindow::on_pushButton_chk_crn_distr_clicked()
@@ -768,6 +783,7 @@ void MainWindow::on_pushButton_chk_crn_distr_clicked()
         caculate_all_record(2);
     if(ui->radioButton_select_color_calib->isChecked())
         caculate_all_record(1);
+    ui->pushButton_chk_crn_distr->setDisabled(true);
 }
 
 void MainWindow::on_radioButton_IR_calib_clicked()
