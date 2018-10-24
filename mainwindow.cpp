@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QTableWidgetItem>
 #include "QStandardItemModel"
-#include "commiunication.h"
+#include "communication.h"
 #include <QMessageBox>
 #include <QSettings>
 #include<QDebug>
@@ -78,7 +78,11 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     ui->tableView_2->show();
 
-    /*disable some widget for easy use!*/
+    /************************************************************/
+    /***********disable some widget for easy use!****************/
+    /***********disable some widget for easy use!****************/
+    /***********disable some widget for easy use!****************/
+    /************************************************************/
     ui->Slider_x->setDisabled(true);
     ui->Slider_y->setDisabled(true);
     ui->pushButton->setDisabled(true);

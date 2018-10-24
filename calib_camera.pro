@@ -19,7 +19,7 @@ SOURCES += main.cpp\
     thread.cpp
 
 HEADERS  += mainwindow.h \
-    commiunication.h \
+    communication.h \
     thread.h
 
 FORMS    += mainwindow.ui

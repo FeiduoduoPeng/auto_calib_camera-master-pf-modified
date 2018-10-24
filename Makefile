@@ -149,7 +149,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		calib_camera.pro mainwindow.h \
-		commiunication.h \
+		communication.h \
 		thread.h main.cpp \
 		mainwindow.cpp \
 		communication.cpp \
@@ -387,7 +387,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h commiunication.h thread.h $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h communication.h thread.h $(DISTDIR)/
 	$(COPY_FILE) --parents main.cpp mainwindow.cpp communication.cpp thread.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
@@ -502,12 +502,10 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
 		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
 		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
-		ui_mainwindow.h \
-		commiunication.h
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
-communication.o: communication.cpp commiunication.h \
-		mainwindow.h \
+communication.o: communication.cpp mainwindow.h \
 		thread.h \
 		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
 		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
@@ -522,8 +520,7 @@ communication.o: communication.cpp commiunication.h \
 		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
 		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
 		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
-		ui_mainwindow.h
+		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o communication.o communication.cpp
 
 thread.o: thread.cpp thread.h \
