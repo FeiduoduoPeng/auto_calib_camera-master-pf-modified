@@ -39,6 +39,14 @@ MainWindow::MainWindow(QWidget *parent) :
     depth_image_list_file_name = "depth_image_list_file.yaml";
     color_calib_file_name = "color_calib_file.yml";
     depth_calib_file_name = "depth_calib_file.yml";
+    /*initialize the frames*/
+    QDir dir_l("./imgL");
+    QStringList filter;
+    filter<<"*.jpg";
+    dir_l.setNameFilters(filter);
+    QFileInfoList fileinfo = dir_l.entryInfoList(filter);
+
+    frames = fileinfo.count() ;
     //查找可用的串口
     foreach(const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
     {
@@ -465,6 +473,7 @@ bool MainWindow::myWriteXML(int total_imgs, string s){
 
 bool MainWindow::myBinocularCalibration(){
     QProcess *proc = new QProcess;
+    //proc->start("./CETOOL_CALI_STEREO_CAL -w=10 -h=11 stereo_calib.xml");	//it's working!
     proc->start("./CETOOL_CALI_STEREO_CAL -w=10 -h=11 stereo_calib.xml");	//it's working!
     return true;
 }
