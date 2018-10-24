@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<opencv_storage>
+<imagelist>
+"./imgL/left0.jpg"
+"./imgR/right0.jpg"
+"./imgL/left1.jpg"
+"./imgR/right1.jpg"
+"./imgL/left2.jpg"
+"./imgR/right2.jpg"
+"./imgL/left3.jpg"
+"./imgR/right3.jpg"
+"./imgL/left4.jpg"
+"./imgR/right4.jpg"
+</imagelist>
+</opencv_storage>

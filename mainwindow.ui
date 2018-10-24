@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>838</width>
-    <height>793</height>
+    <width>1128</width>
+    <height>819</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -23,6 +23,12 @@
    <layout class="QGridLayout" name="gridLayout_6">
     <item row="0" column="1">
      <widget class="QFrame" name="frame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -415,6 +421,101 @@
         </layout>
        </widget>
       </widget>
+      <widget class="QWidget" name="TabBino">
+       <attribute name="title">
+        <string>双目</string>
+       </attribute>
+       <widget class="QLabel" name="Bino_left_show">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>381</width>
+          <height>321</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>BinoLeft</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="Bino_right_show">
+        <property name="geometry">
+         <rect>
+          <x>470</x>
+          <y>0</y>
+          <width>381</width>
+          <height>321</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>BinoRight</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_open_bino">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>460</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>打开双目</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_save_bino">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>500</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>保存双目</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_start_calib_bino">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>540</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>开始标定</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_clear_bino">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>580</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>清除图像</string>
+        </property>
+       </widget>
+      </widget>
       <widget class="QWidget" name="Tab2">
        <attribute name="title">
         <string>设置与检查</string>
@@ -558,7 +659,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>838</width>
+     <width>1128</width>
      <height>28</height>
     </rect>
    </property>

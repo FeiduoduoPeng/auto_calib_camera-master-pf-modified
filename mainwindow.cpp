@@ -20,8 +20,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <sstream>
 Ui::MainWindow *my_ui;
+extern std::mutex pfmutex;
+
 using namespace std;
 using namespace cv;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -30,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     my_ui=ui;
+
+    binoTimer =  new QTimer(this);
     color_image_list_file_name = "color_image_list_file.yaml";
     depth_image_list_file_name = "depth_image_list_file.yaml";
     color_calib_file_name = "color_calib_file.yml";
@@ -50,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_open_camera->setText(tr("open_camera"));
 
     QObject::connect(&thread, SIGNAL(send(QString)), this, SLOT(accept(QString)),Qt::BlockingQueuedConnection);
+    QObject::connect(binoTimer, SIGNAL(timeout()), this, SLOT(binoTimerHandler()));
 
     QStringList labels = QObject::trUtf8("X,Y").simplified().split(",");
     model->setHorizontalHeaderLabels(labels);
@@ -361,6 +367,16 @@ void MainWindow::accept(QString msg)
     ui->label->setPixmap(QPixmap::fromImage(image));
 }
 
+
+bool MainWindow::saveBinoImage(const lrImg &plr){
+    std::ostringstream ostr_l, ostr_r;
+    ostr_l<<"./imgL/"<<"left"<<frames<<".jpg";
+    ostr_r<<"./imgR/"<<"right"<<frames<<".jpg";
+    cv::imwrite(ostr_l.str(), plr.left);
+    cv::imwrite(ostr_r.str(), plr.right);
+    frames++;
+}
+
 void MainWindow::on_pushButton_open_camera_clicked()
 {
     if(ui->pushButton_open_camera->text()==tr("open_camera"))
@@ -427,6 +443,31 @@ bool MainWindow::SaveStringList(const string outputname, vector<string>& l)
 
 }
 
+bool MainWindow::myWriteXML(int total_imgs, string s){
+    std::ofstream out_file;
+    out_file.open(s);
+    if(!out_file){
+        return false;
+    }
+
+    out_file<<"<?xml version=\"1.0\"?>\n"<<std::endl;
+    out_file<<"<opencv_storage>"<<std::endl;
+    out_file<<"<imagelist>"<<std::endl;
+    for(int i=0; i<total_imgs; ++i){
+        out_file<<"\"./imgL/left"<<i<<".jpg\""<<std::endl;
+        out_file<<"\"./imgR/right"<<i<<".jpg\""<<std::endl;
+    }
+    out_file<<"</imagelist>"<<std::endl;
+    out_file<<"</opencv_storage>"<<std::endl;
+    out_file.close();
+    return true;
+}
+
+bool MainWindow::myBinocularCalibration(){
+    QProcess *proc = new QProcess;
+    proc->start("./CETOOL_CALI_STEREO_CAL -w=10 -h=11 stereo_calib.xml");	//it's working!
+    return true;
+}
 
 void MainWindow::on_pushButton_save_image_clicked()
 {
@@ -628,6 +669,25 @@ void MainWindow::handleTimeout()
         }
     }
 }
+
+void MainWindow::binoTimerHandler(){
+    cv::Mat left_resized, right_resized;
+
+    pfmutex.lock();
+    if(plr.left.data && plr.right.data){
+        cv::resize(plr.left, left_resized, cv::Size(plr.left.cols/2 ,plr.left.rows/2));
+        cv::resize(plr.right, right_resized, cv::Size(plr.right.cols/2 ,plr.right.rows/2));
+    }
+    if(mySaveFlag){
+        saveBinoImage(plr);
+        mySaveFlag = false;
+    }
+    pfmutex.unlock();
+
+    ui->Bino_left_show->setPixmap(QPixmap::fromImage(Mat2QImage(left_resized)) );
+    ui->Bino_right_show->setPixmap(QPixmap::fromImage(Mat2QImage(right_resized)) );
+}
+
 void MainWindow::on_pushButton_start_calib_clicked()
 {
     if(ui->pushButton_start_calib->text()==tr("start_calib"))
@@ -649,7 +709,6 @@ void MainWindow::on_pushButton_start_calib_clicked()
 
 void MainWindow::on_pushButton_read_lists_clicked()
 {
-
      int cnt,x,y;
 
      QString data_name;
@@ -793,4 +852,88 @@ void MainWindow::on_pushButton_chk_crn_distr_clicked()
 void MainWindow::on_radioButton_IR_calib_clicked()
 {
 
+}
+
+void MainWindow::on_tabWidget_tabBarClicked(int index)
+{
+}
+
+void MainWindow::on_tabWidget_currentChanged(int index)
+{
+    //if(ui->tabWidget->currentIndex() == 1){
+    //    std::cout<<"disable"<<std::endl;
+    //    ui->pushButton->setDisabled(true);
+    //    ui->pushButton_save_lists->setDisabled(true);
+    //    ui->pushButton_read_lists->setDisabled(true);
+    //    ui->spinBox_grid_height->setDisabled(true);
+    //    ui->spinBox_grid_width->setDisabled(true);
+    //    ui->radioButton_color_calib->setDisabled(true);
+    //    ui->radioButton_IR_calib->setDisabled(true);
+    //    ui->radioButton_select_ir_calib->setDisabled(true);
+    //    ui->pushButton_save_image->setDisabled(true);
+    //    ui->radioButton_IR->setDisabled(true);
+    //}else{
+    //    std::cout<<"enable"<<std::endl;
+    //    ui->pushButton->setDisabled(false);
+    //    ui->pushButton_save_lists->setDisabled(false);
+    //    ui->pushButton_read_lists->setDisabled(false);
+    //    ui->spinBox_grid_height->setDisabled(false);
+    //    ui->spinBox_grid_width->setDisabled(false);
+    //    ui->radioButton_color_calib->setDisabled(false);
+    //    ui->radioButton_IR_calib->setDisabled(false);
+    //    ui->radioButton_select_ir_calib->setDisabled(false);
+    //    ui->pushButton_save_image->setDisabled(false);
+    //    ui->radioButton_IR->setDisabled(false);
+    //}
+}
+
+void MainWindow::on_pushButton_open_bino_clicked()
+{
+    ce_config_load_settings("./config/cecfg_std.txt");
+
+    int r = ce_cam_capture_init();
+    if(r < 0)
+    {
+        printf("celog: cam capture error \r\n");
+    }else{
+        printf("celog: cam capture success \r\n");
+
+        r = ce_cam_preprocess_init();
+        if(r < 0)
+        {
+            printf("celog: cam preprocess error \r\n");
+        }else{
+            //ce_cam_showimg_init(plr);
+            ce_cam_capture_calib_init(plr);
+        }
+    }
+    binoTimer->start(100);
+}
+
+void MainWindow::on_pushButton_save_bino_clicked()
+{
+    mySaveFlag = true;
+}
+
+void MainWindow::on_pushButton_clear_bino_clicked()
+{
+    QDir dir_l("./imgL");
+    QDir dir_r("./imgR");
+    foreach (QString dirFile, dir_l.entryList()) {
+        std::cout<<dirFile.toStdString()<<std::endl;
+        dir_l.remove(dirFile);
+    }
+    foreach (QString dirFile, dir_r.entryList()) {
+        std::cout<<dirFile.toStdString()<<std::endl;
+        dir_r.remove(dirFile);
+    }
+    frames = 0 ;
+}
+
+void MainWindow::on_pushButton_start_calib_bino_clicked()
+{
+    myWriteXML(frames);
+    std::cout<<frames<<std::endl;
+    sleep(1);
+    myBinocularCalibration();
 }

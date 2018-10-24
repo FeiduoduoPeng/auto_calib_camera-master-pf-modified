@@ -10,6 +10,10 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include "QStandardItemModel"
 
+#include "cedriver_cam.h"
+#include "cedriver_config.h"
+#include "mycetool_calib_stereo_capture_img.h"
+
 #define REC_WIDTH 5
 #define REC_HEIGHT 5
 
@@ -29,8 +33,12 @@ public:
     void Read_Data();
     bool incre_record(int i, int j);
     bool caculate_all_record(int img_type);
-
     bool SaveStringList(const string outputname, vector<string>& l);
+
+    bool saveBinoImage(const lrImg &plr);
+    bool myWriteXML(int total_img, std::string s="stereo_calib.xml");
+    bool myBinocularCalibration();
+
     ~MainWindow();
 
 public slots:
@@ -40,53 +48,48 @@ public slots:
 private slots:
 
     void on_pushButton_open_camera_clicked();
-
     void on_pushButton_save_image_clicked();
-
     void on_pushButton_open_serial_clicked();
-
     void on_pushButton_read_image_list_clicked();
-
     void on_pushButton_clean_clicked();
-
     void on_pushButton_clicked();
-
     void on_pushButton_start_calib_clicked();
-
     void handleTimeout();
+    void binoTimerHandler();
     void on_pushButton_read_lists_clicked();
-
     void on_pushButton_save_lists_clicked();
-
     void on_Slider_y_valueChanged(int value);
-
     void on_Slider_x_valueChanged(int value);
-
     void on_radioButton_list1_clicked();
-
     void on_radioButton_list2_clicked();
-
     void on_radioButton_list3_clicked();
-
     void on_radioButton_IR_toggled(bool checked);
-
     void on_radioButton_color_toggled(bool checked);
-
     void on_pushButton_clear_record_clicked();
-
+    void on_radioButton_IR_calib_clicked();
+    void on_tabWidget_tabBarClicked(int index);
+    void on_tabWidget_currentChanged(int index);
+    void on_pushButton_open_bino_clicked();
+    void on_pushButton_save_bino_clicked();
+    void on_pushButton_clear_bino_clicked();
+    void on_pushButton_start_calib_bino_clicked();
     void on_pushButton_chk_crn_distr_clicked();
 
-    void on_radioButton_IR_calib_clicked();
 
 private:
     Ui::MainWindow *ui;
     Thread thread;
     QTimer *m_pTimer;
+    QTimer *binoTimer;
     string depth_calib_file_name;
     string color_calib_file_name;
     string depth_image_list_file_name;
     string color_image_list_file_name;
     string IR_image_list_file_name;
+
+    lrImg plr;
+    bool mySaveFlag=false;
+    int frames = 0;
     int run_step ;
     int list_num = 0;
     QStandardItemModel* model = new QStandardItemModel();

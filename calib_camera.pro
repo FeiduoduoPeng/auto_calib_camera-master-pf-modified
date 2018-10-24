@@ -12,15 +12,28 @@ CONFIG += c++11
 TARGET = calib_camera
 TEMPLATE = app
 
-
+INCLUDEPATH += $$PWD/include
 SOURCES += main.cpp\
         mainwindow.cpp \
     communication.cpp \
-    thread.cpp
+    thread.cpp \
+    src/cedriver_usb.cpp \
+    src/cedriver_cam.cpp \
+    src/cedriver_config.cpp \
+    src/celib_img_process.cpp \
+    src/cetool_cali_stereo_capture_img.cpp
 
 HEADERS  += mainwindow.h \
     communication.h \
-    thread.h
+    thread.h \
+    global.h \
+    include/cedriver_cam.h \
+    include/cedriver_imu.h \
+    include/cedriver_config.h \
+    include/celib_img_process.h \
+    include/cedriver_usb.h \
+    include/mycetool_calib_stereo_capture_img.h \
+    include/threadsafe_queue.h
 
 FORMS    += mainwindow.ui
 

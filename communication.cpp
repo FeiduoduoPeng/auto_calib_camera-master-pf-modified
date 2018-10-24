@@ -1,4 +1,4 @@
-#include "commiunication.h"
+#include "communication.h"
 #include "mainwindow.h"
 #include <iomanip>
 #include <iostream>
