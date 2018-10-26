@@ -27,7 +27,10 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 
+#include "myWriteMySQL.h"
+
 #include <vector>
+#include <sstream>
 #include <string>
 #include <algorithm>
 #include <iostream>
@@ -297,7 +300,7 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
     cout << "average epipolar err = " <<  err/npoints << endl;
 
     // save intrinsic parameters
-    FileStorage fs("../config/intrinsics.yml", FileStorage::WRITE);
+    FileStorage fs("./config/intrinsics.yml", FileStorage::WRITE);
     if( fs.isOpened() )
     {
         fs << "M1" << cameraMatrix[0] << "D1" << distCoeffs[0] <<
@@ -325,7 +328,7 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
 
 
 
-    fs.open("../config/extrinsics.yml", FileStorage::WRITE);
+    fs.open("./config/extrinsics.yml", FileStorage::WRITE);
     if( fs.isOpened() )
     {
         fs << "R" << R << "T" << T << "R1" << R1 << "R2" << R2 << "P1" << P1 << "P2" << P2 << "Q" << Q;
@@ -333,6 +336,13 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
     }
     else
         cout << "Error: can not save the extrinsic parameters\n";
+
+    //save camera-params to mysql , the function is added by pf;
+    stringstream ss;
+    ss << "M1" << cameraMatrix[0] << "D1" << distCoeffs[0] <<
+        "M2" << cameraMatrix[1] << "D2" << distCoeffs[1] <<
+        "R" << R << "T" << T << "R1" << R1 << "R2" << R2 << "P1" << P1 << "P2" << P2 << "Q" << Q;
+    myWriteMySQL("uuid=000", ss.str(), "bino");
 
     // OpenCV can handle left-right
     // or up-down camera arrangements
@@ -446,7 +456,7 @@ int main(int argc, char** argv)
     bool showRectified;
     cv::CommandLineParser parser(argc,
                                  argv,
-                                 "{w|11|}{h|8|}{s|30.0|}{nr||}{help||}{@input|../config/stereo_calib.xml|}");
+                                 "{w|10|}{h|11|}{s|40.0|}{nr||}{help||}{@input| ./stereo_calib.xml|}");
 
     if (parser.has("help"))
         return print_help();

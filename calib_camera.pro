@@ -67,6 +67,8 @@ LIBS += /usr/local/lib/libopencv_calib3d.so\
     /usr/local/lib/libopencv_imgcodecs.so \
 
 
+LIBS += -L/use/local/lib
+LIBS += -lmysqlcppconn
 
 LIBS += -L$$(OPENNI2_REDIST)
 

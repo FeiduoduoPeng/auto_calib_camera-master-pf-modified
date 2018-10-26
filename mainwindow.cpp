@@ -473,8 +473,12 @@ bool MainWindow::myWriteXML(int total_imgs, string s){
 
 bool MainWindow::myBinocularCalibration(){
     QProcess *proc = new QProcess;
-    //proc->start("./CETOOL_CALI_STEREO_CAL -w=10 -h=11 stereo_calib.xml");	//it's working!
-    proc->start("./CETOOL_CALI_STEREO_CAL -w=10 -h=11 stereo_calib.xml");	//it's working!
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("LD_LIBRARY_PATH","/usr/local/lib");
+    proc->setProcessEnvironment(env);
+    proc->start("./CETOOL_CALI_STEREO_CAL -w=10 -h=11 stereo_calib.xml ");	//it's working!
+
+    std::cout<<"in calibration"<<std::endl;
     return true;
 }
 
@@ -942,7 +946,7 @@ void MainWindow::on_pushButton_clear_bino_clicked()
 void MainWindow::on_pushButton_start_calib_bino_clicked()
 {
     myWriteXML(frames);
-    std::cout<<frames<<std::endl;
+    std::cout<<"find images: "<<frames<<std::endl;
     sleep(1);
     myBinocularCalibration();
 }

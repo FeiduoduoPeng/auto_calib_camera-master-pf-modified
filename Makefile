@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -Iinclude -isystem /usr/local/include -I../../Document/Linux/OpenNI-Linux-x64-2.3/Include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtSerialPort -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+INCPATH       = -I. -Iinclude -isystem /usr/local/include -I../Document/Linux/OpenNI-Linux-x64-2.3/Include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtSerialPort -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -33,10 +33,10 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = calib_camera1.0.0
-DISTDIR = /home/leisure/Desktop/auto_calib_camera-master-pf-modified/.tmp/calib_camera1.0.0
+DISTDIR = /home/leisure/auto_calib_camera-master-pf-modified/.tmp/calib_camera1.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_ocl.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so /usr/local/lib/libopencv_imgcodecs.so -L/home/leisure/Document/Linux/OpenNI-Linux-x64-2.3/Redist -lOpenNI2 -lusb-1.0 -lGLU -lglut -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_ocl.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so /usr/local/lib/libopencv_imgcodecs.so -L/use/local/lib -lmysqlcppconn -L/home/leisure/Document/Linux/OpenNI-Linux-x64-2.3/Redist -lOpenNI2 -lusb-1.0 -lGLU -lglut -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -439,39 +439,45 @@ compiler_moc_header_make_all: moc_mainwindow.cpp moc_thread.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp moc_thread.cpp
 moc_mainwindow.cpp: thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		include/cedriver_cam.h \
+		include/threadsafe_queue.h \
+		include/cedriver_global_config.h \
+		global.h \
+		include/cedriver_config.h \
+		include/mycetool_calib_stereo_capture_img.h \
 		mainwindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/Desktop/auto_calib_camera-master-pf-modified -I/home/leisure/Desktop/auto_calib_camera-master-pf-modified/include -I/usr/local/include -I/home/leisure/Document/Linux/OpenNI-Linux-x64-2.3/Include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/auto_calib_camera-master-pf-modified -I/home/leisure/auto_calib_camera-master-pf-modified/include -I/usr/local/include -I/home/leisure/Document/Linux/OpenNI-Linux-x64-2.3/Include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
 
-moc_thread.cpp: ../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+moc_thread.cpp: ../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
 		thread.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/Desktop/auto_calib_camera-master-pf-modified -I/home/leisure/Desktop/auto_calib_camera-master-pf-modified/include -I/usr/local/include -I/home/leisure/Document/Linux/OpenNI-Linux-x64-2.3/Include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include thread.h -o moc_thread.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/auto_calib_camera-master-pf-modified -I/home/leisure/auto_calib_camera-master-pf-modified/include -I/usr/local/include -I/home/leisure/Document/Linux/OpenNI-Linux-x64-2.3/Include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include thread.h -o moc_thread.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -493,38 +499,50 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 
 main.o: main.cpp mainwindow.h \
 		thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		include/cedriver_cam.h \
+		include/threadsafe_queue.h \
+		include/cedriver_global_config.h \
+		global.h \
+		include/cedriver_config.h \
+		include/mycetool_calib_stereo_capture_img.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainwindow.o: mainwindow.cpp mainwindow.h \
 		thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		include/cedriver_cam.h \
+		include/threadsafe_queue.h \
+		include/cedriver_global_config.h \
+		global.h \
+		include/cedriver_config.h \
+		include/mycetool_calib_stereo_capture_img.h \
 		ui_mainwindow.h \
 		communication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
@@ -532,39 +550,51 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 communication.o: communication.cpp communication.h \
 		mainwindow.h \
 		thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		include/cedriver_cam.h \
+		include/threadsafe_queue.h \
+		include/cedriver_global_config.h \
+		global.h \
+		include/cedriver_config.h \
+		include/mycetool_calib_stereo_capture_img.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o communication.o communication.cpp
 
 thread.o: thread.cpp thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
-		mainwindow.h
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
+		../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		mainwindow.h \
+		include/cedriver_cam.h \
+		include/threadsafe_queue.h \
+		include/cedriver_global_config.h \
+		global.h \
+		include/cedriver_config.h \
+		include/mycetool_calib_stereo_capture_img.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o thread.o thread.cpp
 
 cedriver_usb.o: src/cedriver_usb.cpp include/cedriver_usb.h \
