@@ -97,18 +97,18 @@ MainWindow::MainWindow(QWidget *parent) :
     /***********disable some widget for easy use!****************/
     /***********disable some widget for easy use!****************/
     /************************************************************/
-    ui->Slider_x->setDisabled(true);
-    ui->Slider_y->setDisabled(true);
-    ui->pushButton->setDisabled(true);
-    ui->pushButton_save_lists->setDisabled(true);
-    ui->pushButton_read_lists->setDisabled(true);
-    ui->spinBox_grid_height->setDisabled(true);
-    ui->spinBox_grid_width->setDisabled(true);
-    ui->radioButton_color_calib->setDisabled(true);
-    ui->radioButton_IR_calib->setDisabled(true);
-    ui->radioButton_select_ir_calib->setDisabled(true);
-    ui->pushButton_save_image->setDisabled(true);
-    ui->radioButton_IR->setDisabled(true);
+    //ui->Slider_x->setDisabled(true);
+    //ui->Slider_y->setDisabled(true);
+    //ui->pushButton->setDisabled(true);
+    //ui->pushButton_save_lists->setDisabled(true);
+    //ui->pushButton_read_lists->setDisabled(true);
+    //ui->spinBox_grid_height->setDisabled(true);
+    //ui->spinBox_grid_width->setDisabled(true);
+    //ui->radioButton_color_calib->setDisabled(true);
+    //ui->radioButton_IR_calib->setDisabled(true);
+    //ui->radioButton_select_ir_calib->setDisabled(true);
+    //ui->pushButton_save_image->setDisabled(true);
+    //ui->radioButton_IR->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
@@ -550,6 +550,7 @@ void MainWindow::on_pushButton_read_image_list_clicked()
     string cmd,width,height;
     int2str(ui->spinBox_grid_height->value(),height);
     int2str(ui->spinBox_grid_width->value(),width);
+    qDebug()<<"in binary execution action";
     if(ui->radioButton_select_color_calib->isChecked())
     {
         /*******************/
@@ -661,7 +662,6 @@ void MainWindow::handleTimeout()
         }
         else if(run_step == 1)
         {
-    qDebug()<<"3 \n";
             if(abs(ui->lcdNumber_imu_x->value() - x)<1&&abs(ui->lcdnumber_imu_y->value() - y)<1)
             {
                 run_step = 2;
@@ -669,16 +669,27 @@ void MainWindow::handleTimeout()
         }
         else if(run_step == 2)
         {
-             thread.SetImageSave();
-             run_step = 0;
+            if(ui->tabWidget->currentIndex()==0){
+                thread.SetImageSave();
+                run_step = 0;
+            }
+            else if(ui->tabWidget->currentIndex()==1){
+                on_pushButton_save_bino_clicked();
+                run_step = 0;
+            }
         }
         else if(run_step == 3)
         {
-            on_pushButton_read_image_list_clicked();
-            run_step =0;	//pf
-            list_num = 0;	//pf
+            if(ui->tabWidget->currentIndex()==0){
+                on_pushButton_read_image_list_clicked();
+            }
+            else if(ui->tabWidget->currentIndex()==1){
+                on_pushButton_start_calib_bino_clicked();
+            }
             m_pTimer->stop();
             ui->pushButton_start_calib->setText(tr("start_calib"));
+            run_step =0;	//pf
+            list_num = 0;	//pf
         }
     }
 }
@@ -902,25 +913,29 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 
 void MainWindow::on_pushButton_open_bino_clicked()
 {
-    ce_config_load_settings("./config/cecfg_std.txt");
-
-    int r = ce_cam_capture_init();
-    if(r < 0)
-    {
-        printf("celog: cam capture error \r\n");
-    }else{
-        printf("celog: cam capture success \r\n");
-
-        r = ce_cam_preprocess_init();
+    if(ui->pushButton_open_bino->text()=="打开双目"){		//open binocular camera
+        ce_config_load_settings("./config/cecfg_std.txt");
+        int r = ce_cam_capture_init();
         if(r < 0)
         {
-            printf("celog: cam preprocess error \r\n");
+            printf("celog: cam capture error \r\n");
         }else{
-            //ce_cam_showimg_init(plr);
-            ce_cam_capture_calib_init(plr);
+            printf("celog: cam capture success \r\n");
+
+            r = ce_cam_preprocess_init();
+            if(r < 0)
+            {
+                printf("celog: cam preprocess error \r\n");
+            }else{
+                //ce_cam_showimg_init(plr);
+                ce_cam_capture_calib_init(plr);
+            }
         }
+        binoTimer->start(100);
+        ui->pushButton_open_bino->setText("关闭双目");
+    }else{		//close binocular camera
+        ce_cam_capture_close();
     }
-    binoTimer->start(100);
 }
 
 void MainWindow::on_pushButton_save_bino_clicked()
@@ -946,7 +961,7 @@ void MainWindow::on_pushButton_clear_bino_clicked()
 void MainWindow::on_pushButton_start_calib_bino_clicked()
 {
     myWriteXML(frames);
-    std::cout<<"find images: "<<frames<<std::endl;
+    std::cout<<"number of found images: "<<frames<<std::endl;
     sleep(1);
     myBinocularCalibration();
 }
