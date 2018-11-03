@@ -576,6 +576,7 @@ void MainWindow::on_pushButton_read_image_list_clicked()
 
 void MainWindow::on_pushButton_clean_clicked()
 {
+    on_pushButton_clear_bino_clicked();
     executeCMD("rm color_image/*");
     executeCMD("rm IR_image/*");
     executeCMD("rm ./color_image_list_file.yaml");
@@ -662,7 +663,7 @@ void MainWindow::handleTimeout()
         }
         else if(run_step == 1)
         {
-            if(abs(ui->lcdNumber_imu_x->value() - x)<1&&abs(ui->lcdnumber_imu_y->value() - y)<1)
+            if(abs(ui->lcdNumber_imu_x->value() - x)<2.0 && abs(ui->lcdnumber_imu_y->value() - y)<2.0)
             {
                 run_step = 2;
             }

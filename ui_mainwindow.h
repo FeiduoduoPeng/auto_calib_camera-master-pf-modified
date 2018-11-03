@@ -391,16 +391,16 @@ public:
         Bino_right_show->setSizePolicy(sizePolicy1);
         pushButton_open_bino = new QPushButton(TabBino);
         pushButton_open_bino->setObjectName(QStringLiteral("pushButton_open_bino"));
-        pushButton_open_bino->setGeometry(QRect(400, 460, 91, 31));
+        pushButton_open_bino->setGeometry(QRect(400, 460, 101, 31));
         pushButton_save_bino = new QPushButton(TabBino);
         pushButton_save_bino->setObjectName(QStringLiteral("pushButton_save_bino"));
-        pushButton_save_bino->setGeometry(QRect(400, 500, 91, 31));
+        pushButton_save_bino->setGeometry(QRect(400, 500, 101, 31));
         pushButton_start_calib_bino = new QPushButton(TabBino);
         pushButton_start_calib_bino->setObjectName(QStringLiteral("pushButton_start_calib_bino"));
-        pushButton_start_calib_bino->setGeometry(QRect(400, 540, 91, 31));
+        pushButton_start_calib_bino->setGeometry(QRect(400, 540, 101, 31));
         pushButton_clear_bino = new QPushButton(TabBino);
         pushButton_clear_bino->setObjectName(QStringLiteral("pushButton_clear_bino"));
-        pushButton_clear_bino->setGeometry(QRect(400, 580, 91, 31));
+        pushButton_clear_bino->setGeometry(QRect(400, 580, 101, 31));
         tabWidget->addTab(TabBino, QString());
         Tab2 = new QWidget();
         Tab2->setObjectName(QStringLiteral("Tab2"));
@@ -456,7 +456,7 @@ public:
         retranslateUi(MainWindow);
 
         PortBox->setCurrentIndex(-1);
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -503,8 +503,8 @@ public:
         Bino_right_show->setText(QApplication::translate("MainWindow", "BinoRight", 0));
         pushButton_open_bino->setText(QApplication::translate("MainWindow", "\346\211\223\345\274\200\345\217\214\347\233\256", 0));
         pushButton_save_bino->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230\345\217\214\347\233\256", 0));
-        pushButton_start_calib_bino->setText(QApplication::translate("MainWindow", "\345\274\200\345\247\213\346\240\207\345\256\232", 0));
-        pushButton_clear_bino->setText(QApplication::translate("MainWindow", "\346\270\205\351\231\244\345\233\276\345\203\217", 0));
+        pushButton_start_calib_bino->setText(QApplication::translate("MainWindow", "\346\240\207\345\256\232", 0));
+        pushButton_clear_bino->setText(QApplication::translate("MainWindow", "\346\270\205\351\231\244\345\217\214\347\233\256", 0));
         tabWidget->setTabText(tabWidget->indexOf(TabBino), QApplication::translate("MainWindow", "\345\217\214\347\233\256", 0));
         pushButton_save_lists->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230\345\210\227\350\241\250", 0));
         pushButton_read_lists->setText(QApplication::translate("MainWindow", "\350\257\273\345\217\226\345\210\227\350\241\250", 0));

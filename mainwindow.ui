@@ -278,7 +278,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Tab1">
        <property name="minimumSize">
@@ -468,7 +468,7 @@
          <rect>
           <x>400</x>
           <y>460</y>
-          <width>91</width>
+          <width>101</width>
           <height>31</height>
          </rect>
         </property>
@@ -481,7 +481,7 @@
          <rect>
           <x>400</x>
           <y>500</y>
-          <width>91</width>
+          <width>101</width>
           <height>31</height>
          </rect>
         </property>
@@ -494,12 +494,12 @@
          <rect>
           <x>400</x>
           <y>540</y>
-          <width>91</width>
+          <width>101</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>开始标定</string>
+         <string>标定</string>
         </property>
        </widget>
        <widget class="QPushButton" name="pushButton_clear_bino">
@@ -507,12 +507,12 @@
          <rect>
           <x>400</x>
           <y>580</y>
-          <width>91</width>
+          <width>101</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>清除图像</string>
+         <string>清除双目</string>
         </property>
        </widget>
       </widget>
