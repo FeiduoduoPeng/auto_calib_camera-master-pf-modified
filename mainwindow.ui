@@ -159,7 +159,7 @@
           <item row="4" column="0">
            <widget class="QPushButton" name="pushButton_start_calib">
             <property name="text">
-             <string>start_calib</string>
+             <string>自动开始</string>
             </property>
            </widget>
           </item>
@@ -190,7 +190,7 @@
           <item row="5" column="0">
            <widget class="QPushButton" name="pushButton_read_image_list">
             <property name="text">
-             <string>校正图像</string>
+             <string>单 校正图像</string>
             </property>
            </widget>
           </item>
@@ -466,8 +466,8 @@
        <widget class="QPushButton" name="pushButton_open_bino">
         <property name="geometry">
          <rect>
-          <x>400</x>
-          <y>460</y>
+          <x>30</x>
+          <y>520</y>
           <width>101</width>
           <height>31</height>
          </rect>
@@ -479,8 +479,8 @@
        <widget class="QPushButton" name="pushButton_save_bino">
         <property name="geometry">
          <rect>
-          <x>400</x>
-          <y>500</y>
+          <x>30</x>
+          <y>560</y>
           <width>101</width>
           <height>31</height>
          </rect>
@@ -492,8 +492,8 @@
        <widget class="QPushButton" name="pushButton_start_calib_bino">
         <property name="geometry">
          <rect>
-          <x>400</x>
-          <y>540</y>
+          <x>30</x>
+          <y>600</y>
           <width>101</width>
           <height>31</height>
          </rect>
@@ -505,8 +505,8 @@
        <widget class="QPushButton" name="pushButton_clear_bino">
         <property name="geometry">
          <rect>
-          <x>400</x>
-          <y>580</y>
+          <x>30</x>
+          <y>640</y>
           <width>101</width>
           <height>31</height>
          </rect>

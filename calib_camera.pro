@@ -38,12 +38,8 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 INCLUDEPATH += /usr/local/include \
-
 /usr/local/include/opencv \
-
-/usr/local/include/opencv2 \
-
-INCLUDEPATH += $$(OPENNI2_INCLUDE)
+/usr/local/include/opencv2
 
 
 LIBS += /usr/local/lib/libopencv_calib3d.so\
@@ -67,9 +63,14 @@ LIBS += /usr/local/lib/libopencv_calib3d.so\
     /usr/local/lib/libopencv_imgcodecs.so \
 
 
-LIBS += -L/use/local/lib
+LIBS += -L/usr/local/lib
 LIBS += -lmysqlcppconn
 
-LIBS += -L$$(OPENNI2_REDIST)
+
+#INCLUDEPATH += $$(OPENNI2_INCLUDE)
+#LIBS += -L$$(OPENNI2_REDIST)
+
+INCLUDEPATH += /usr/include/openni2
+LIBS += -L/usr/lib
 
 LIBS += -lOpenNI2 -lusb-1.0 -lGL -lGLU -lglut

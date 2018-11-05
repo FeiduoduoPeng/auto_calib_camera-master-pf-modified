@@ -427,7 +427,7 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
             for( j = 0; j < canvas.cols; j += 16 )
                 line(canvas, Point(j, 0), Point(j, canvas.rows), Scalar(0, 255, 0), 1, 8);
         imshow("rectified", canvas);
-        waitKey(500);
+        waitKey(0);
     }
 }
 

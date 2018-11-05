@@ -688,7 +688,7 @@ void MainWindow::handleTimeout()
                 on_pushButton_start_calib_bino_clicked();
             }
             m_pTimer->stop();
-            ui->pushButton_start_calib->setText(tr("start_calib"));
+            ui->pushButton_start_calib->setText(tr("自动开始"));
             run_step =0;	//pf
             list_num = 0;	//pf
         }
@@ -715,18 +715,19 @@ void MainWindow::binoTimerHandler(){
 
 void MainWindow::on_pushButton_start_calib_clicked()
 {
-    if(ui->pushButton_start_calib->text()==tr("start_calib"))
+    //if(ui->pushButton_start_calib->text()==tr("start_calib"))
+    if(ui->pushButton_start_calib->text()==tr("自动开始"))
     {
         m_pTimer = new QTimer(this);
         connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
         m_pTimer->start(1000);
-        ui->pushButton_start_calib->setText(tr("stop_calib"));
+        ui->pushButton_start_calib->setText(tr("停止"));
     }
     else
     {
         run_step = 0;
         list_num = 0;
-        ui->pushButton_start_calib->setText(tr("start_calib"));
+        ui->pushButton_start_calib->setText(tr("自动开始"));
         m_pTimer->stop();
     }
 
