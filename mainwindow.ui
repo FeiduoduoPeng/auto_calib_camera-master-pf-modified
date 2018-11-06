@@ -428,10 +428,10 @@
        <widget class="QLabel" name="Bino_left_show">
         <property name="geometry">
          <rect>
-          <x>0</x>
+          <x>90</x>
           <y>0</y>
           <width>381</width>
-          <height>321</height>
+          <height>211</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -447,10 +447,10 @@
        <widget class="QLabel" name="Bino_right_show">
         <property name="geometry">
          <rect>
-          <x>470</x>
+          <x>500</x>
           <y>0</y>
           <width>381</width>
-          <height>321</height>
+          <height>211</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -513,6 +513,32 @@
         </property>
         <property name="text">
          <string>清除双目</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="Bino_left_rectified">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>250</y>
+          <width>341</width>
+          <height>211</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>LeftRectified</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="Bino_right_rectified">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>270</y>
+          <width>341</width>
+          <height>211</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>RightRectified</string>
         </property>
        </widget>
       </widget>

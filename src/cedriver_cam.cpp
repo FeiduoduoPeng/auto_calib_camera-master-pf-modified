@@ -654,8 +654,6 @@ void ce_cam_showimg_close()
 
 static void* ce_cam_preprocess(void *)
 {
-    
-    
     cv::Mat img_left(cv::Size(ce_config_get_cf_img_width(),ce_config_get_cf_img_height()),CV_8UC1);
     cv::Mat img_right(cv::Size(ce_config_get_cf_img_width(),ce_config_get_cf_img_height()),CV_8UC1);
     
@@ -682,9 +680,7 @@ static void* ce_cam_preprocess(void *)
     fs.open(ce_config_get_cf_cam_extrinsics(), cv::FileStorage::READ);
     if(!fs.isOpened())
     {
-
         printf("Failed to open file extrinsics_filename \n");
-
     }
 
     fs["R"] >> R;
@@ -695,18 +691,14 @@ static void* ce_cam_preprocess(void *)
     fs["P1"] >> P1;
     fs["P2"] >> P2;
     fs["Q"] >> Q;
-    
-    
-    cv::fisheye::initUndistortRectifyMap(M1, D1, R1, P1, img_left.size(), CV_16SC2, l_remapx, l_remapy);
-    cv::fisheye::initUndistortRectifyMap(M2, D2, R2, P2, img_right.size(), CV_16SC2, r_remapx, r_remapy);
-    
+
+    //**cv::fisheye::initUndistortRectifyMap(M1, D1, R1, P1, img_left.size(), CV_16SC2, l_remapx, l_remapy);
+    //**cv::fisheye::initUndistortRectifyMap(M2, D2, R2, P2, img_right.size(), CV_16SC2, r_remapx, r_remapy);
     
     img_pkg timg_pkg;
-
     img_pkg *l_img_pkg = NULL;
     img_pkg *r_img_pkg = NULL;
 
-    
     while(!ce_cam_preprocess_stop_run)
     {
         if((!img_pkg_left_list.empty()) && (!img_pkg_right_list.empty()))
@@ -752,18 +744,17 @@ static void* ce_cam_preprocess(void *)
                 t_output_pkg->left_img->timestamp = l_img_pkg->timestamp;      // merger the timestamp to left
                 t_output_pkg->right_img->timestamp = l_img_pkg->timestamp;
 
-
-                if(ce_config_get_cf_cam_rectify())
-                {
-                    memcpy(img_left.data, t_output_pkg->left_img->data, ce_config_get_cf_img_size());
-                    memcpy(img_right.data,t_output_pkg->right_img->data,ce_config_get_cf_img_size());
+                //**if(ce_config_get_cf_cam_rectify())
+                //**{
+                //**    memcpy(img_left.data, t_output_pkg->left_img->data, ce_config_get_cf_img_size());
+                //**    memcpy(img_right.data,t_output_pkg->right_img->data,ce_config_get_cf_img_size());
         
-                    remap(img_left, img_left_remap, l_remapx, l_remapy, cv::INTER_LINEAR);
-                    remap(img_right, img_right_remap, r_remapx, r_remapy, cv::INTER_LINEAR);
-                    
-                    memcpy(t_output_pkg->left_img->data, img_left_remap.data, ce_config_get_cf_img_size());
-                    memcpy(t_output_pkg->right_img->data, img_right_remap.data, ce_config_get_cf_img_size());
-                }
+                //**    remap(img_left, img_left_remap, l_remapx, l_remapy, cv::INTER_LINEAR);
+                //**    remap(img_right, img_right_remap, r_remapx, r_remapy, cv::INTER_LINEAR);
+                //**
+                //**    memcpy(t_output_pkg->left_img->data, img_left_remap.data, ce_config_get_cf_img_size());
+                //**    memcpy(t_output_pkg->right_img->data, img_right_remap.data, ce_config_get_cf_img_size());
+                //**}
                 
                 d1_img_output_pkg *t_pkg_giveup = NULL;
 

@@ -92,6 +92,30 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     ui->tableView_2->show();
 
+    fs_in = cv::FileStorage("./config/intrinsics.yml", cv::FileStorage::READ);
+    fs_ex = cv::FileStorage("./config/extrinsics.yml", cv::FileStorage::READ);
+    /******read the xxtrinsics matrix to rectify image*******/
+    if( (!fs_in.isOpened()) || (!fs_ex.isOpened()) ){
+        printf("Failed to open file xxtrinsic.yml");
+        enable_rectify = false;
+    }
+    else{
+        fs_in["M1"] >> M1;
+        fs_in["D1"] >> D1;
+        fs_in["M2"] >> M2;
+        fs_in["D2"] >> D2;
+
+        fs_ex["R"]	>> R;
+        fs_ex["T"]	>> T;
+        fs_ex["R1"]	>> R1;
+        fs_ex["R2"]	>> R2;
+        fs_ex["P1"]	>> P1;
+        fs_ex["P2"]	>> P2;
+        fs_ex["Q"]	>> Q;
+        enable_rectify = true;
+    }
+
+
     /************************************************************/
     /***********disable some widget for easy use!****************/
     /***********disable some widget for easy use!****************/
@@ -425,7 +449,6 @@ int MainWindow::read_all_file_name(string path,vector<string> &Files)
             Files.push_back(path+temp);
             //cout << files[i] << endl;
           }
-
       }
 
       closedir(dir);
@@ -697,20 +720,39 @@ void MainWindow::handleTimeout()
 
 void MainWindow::binoTimerHandler(){
     cv::Mat left_resized, right_resized;
+    cv::Mat left_rectified, right_rectified;
+    cv::Mat l_remapx, l_remapy, r_remapx, r_remapy;
 
     pfmutex.lock();
     if(plr.left.data && plr.right.data){
         cv::resize(plr.left, left_resized, cv::Size(plr.left.cols/2 ,plr.left.rows/2));
         cv::resize(plr.right, right_resized, cv::Size(plr.right.cols/2 ,plr.right.rows/2));
-    }
-    if(mySaveFlag){
-        saveBinoImage(plr);
-        mySaveFlag = false;
+
+        if(enable_rectify){
+            cv::fisheye::initUndistortRectifyMap(M1, D1, R1, P1, plr.left.size(), CV_16SC2, l_remapx, l_remapy);
+            cv::fisheye::initUndistortRectifyMap(M2, D2, R2, P2, plr.right.size(), CV_16SC2, r_remapx, r_remapy);
+            cv::remap(plr.left, left_rectified, l_remapx, l_remapy, cv::INTER_LINEAR);
+            cv::remap(plr.right, right_rectified, r_remapx, r_remapy, cv::INTER_LINEAR);
+
+            cv::resize(left_rectified, left_rectified, cv::Size(plr.left.cols/2 ,plr.left.rows/2));
+            cv::resize(right_rectified, right_rectified, cv::Size(plr.right.cols/2 ,plr.right.rows/2));
+        }
+        if(mySaveFlag){
+            saveBinoImage(plr);
+            mySaveFlag = false;
+        }
     }
     pfmutex.unlock();
+    ui->Bino_left_rectified->setPixmap(QPixmap::fromImage(Mat2QImage(left_rectified)) );
+    ui->Bino_right_rectified->setPixmap(QPixmap::fromImage(Mat2QImage(right_rectified)) );
+    ui->Bino_left_rectified->adjustSize();
+    ui->Bino_right_rectified->adjustSize();
 
     ui->Bino_left_show->setPixmap(QPixmap::fromImage(Mat2QImage(left_resized)) );
     ui->Bino_right_show->setPixmap(QPixmap::fromImage(Mat2QImage(right_resized)) );
+    ui->Bino_left_show->adjustSize();
+    ui->Bino_right_show->adjustSize();
+
 }
 
 void MainWindow::on_pushButton_start_calib_clicked()
@@ -967,3 +1009,4 @@ void MainWindow::on_pushButton_start_calib_bino_clicked()
     sleep(1);
     myBinocularCalibration();
 }
+

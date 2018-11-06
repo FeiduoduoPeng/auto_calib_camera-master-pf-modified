@@ -75,7 +75,6 @@ private slots:
     void on_pushButton_start_calib_bino_clicked();
     void on_pushButton_chk_crn_distr_clicked();
 
-
 private:
     Ui::MainWindow *ui;
     Thread thread;
@@ -94,6 +93,13 @@ private:
     int list_num = 0;
     QStandardItemModel* model = new QStandardItemModel();
     QStandardItemModel* model2 = new QStandardItemModel();
+
+    /*for rectify*/
+    cv::FileStorage fs_in;//("./config/intrinsics.yml", cv::FileStorage::READ);
+    cv::FileStorage fs_ex;//("./config/extrinsics.yml", cv::FileStorage::READ);
+    cv::Mat M1,D1,M2,D2;
+    cv::Mat R,T,R1,P1,R2,P2,Q;
+    bool enable_rectify=false;
 
 };
 
