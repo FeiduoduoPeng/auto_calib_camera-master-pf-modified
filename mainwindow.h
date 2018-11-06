@@ -75,6 +75,8 @@ private slots:
     void on_pushButton_start_calib_bino_clicked();
     void on_pushButton_chk_crn_distr_clicked();
 
+    void on_pushButton_show_rectified_clicked();
+
 private:
     Ui::MainWindow *ui;
     Thread thread;
@@ -99,7 +101,8 @@ private:
     cv::FileStorage fs_ex;//("./config/extrinsics.yml", cv::FileStorage::READ);
     cv::Mat M1,D1,M2,D2;
     cv::Mat R,T,R1,P1,R2,P2,Q;
-    bool enable_rectify=false;
+    bool enable_rectify = false;
+    bool matrix_rdy = false;
 
 };
 

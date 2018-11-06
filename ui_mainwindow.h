@@ -96,7 +96,7 @@ public:
     QPushButton *pushButton_start_calib_bino;
     QPushButton *pushButton_clear_bino;
     QLabel *Bino_left_rectified;
-    QLabel *Bino_right_rectified;
+    QPushButton *pushButton_show_rectified;
     QWidget *Tab2;
     QTableView *tableView;
     QPushButton *pushButton_save_lists;
@@ -405,10 +405,10 @@ public:
         pushButton_clear_bino->setGeometry(QRect(30, 640, 101, 31));
         Bino_left_rectified = new QLabel(TabBino);
         Bino_left_rectified->setObjectName(QStringLiteral("Bino_left_rectified"));
-        Bino_left_rectified->setGeometry(QRect(90, 250, 341, 211));
-        Bino_right_rectified = new QLabel(TabBino);
-        Bino_right_rectified->setObjectName(QStringLiteral("Bino_right_rectified"));
-        Bino_right_rectified->setGeometry(QRect(490, 270, 341, 211));
+        Bino_left_rectified->setGeometry(QRect(80, 280, 771, 211));
+        pushButton_show_rectified = new QPushButton(TabBino);
+        pushButton_show_rectified->setObjectName(QStringLiteral("pushButton_show_rectified"));
+        pushButton_show_rectified->setGeometry(QRect(150, 640, 91, 31));
         tabWidget->addTab(TabBino, QString());
         Tab2 = new QWidget();
         Tab2->setObjectName(QStringLiteral("Tab2"));
@@ -513,8 +513,8 @@ public:
         pushButton_save_bino->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230\345\217\214\347\233\256", 0));
         pushButton_start_calib_bino->setText(QApplication::translate("MainWindow", "\346\240\207\345\256\232", 0));
         pushButton_clear_bino->setText(QApplication::translate("MainWindow", "\346\270\205\351\231\244\345\217\214\347\233\256", 0));
-        Bino_left_rectified->setText(QApplication::translate("MainWindow", "LeftRectified", 0));
-        Bino_right_rectified->setText(QApplication::translate("MainWindow", "RightRectified", 0));
+        Bino_left_rectified->setText(QApplication::translate("MainWindow", "Rectified", 0));
+        pushButton_show_rectified->setText(QApplication::translate("MainWindow", "\347\237\253\346\255\243\346\225\210\346\236\234", 0));
         tabWidget->setTabText(tabWidget->indexOf(TabBino), QApplication::translate("MainWindow", "\345\217\214\347\233\256", 0));
         pushButton_save_lists->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230\345\210\227\350\241\250", 0));
         pushButton_read_lists->setText(QApplication::translate("MainWindow", "\350\257\273\345\217\226\345\210\227\350\241\250", 0));

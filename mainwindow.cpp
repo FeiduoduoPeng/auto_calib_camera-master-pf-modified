@@ -97,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent) :
     /******read the xxtrinsics matrix to rectify image*******/
     if( (!fs_in.isOpened()) || (!fs_ex.isOpened()) ){
         printf("Failed to open file xxtrinsic.yml");
-        enable_rectify = false;
+        matrix_rdy = false;
     }
     else{
         fs_in["M1"] >> M1;
@@ -112,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent) :
         fs_ex["P1"]	>> P1;
         fs_ex["P2"]	>> P2;
         fs_ex["Q"]	>> Q;
-        enable_rectify = true;
+        matrix_rdy = true;
     }
 
 
@@ -722,13 +722,14 @@ void MainWindow::binoTimerHandler(){
     cv::Mat left_resized, right_resized;
     cv::Mat left_rectified, right_rectified;
     cv::Mat l_remapx, l_remapy, r_remapx, r_remapy;
+    cv::Mat canvas, toShow;
 
     pfmutex.lock();
     if(plr.left.data && plr.right.data){
         cv::resize(plr.left, left_resized, cv::Size(plr.left.cols/2 ,plr.left.rows/2));
         cv::resize(plr.right, right_resized, cv::Size(plr.right.cols/2 ,plr.right.rows/2));
 
-        if(enable_rectify){
+        if(enable_rectify && matrix_rdy){
             cv::fisheye::initUndistortRectifyMap(M1, D1, R1, P1, plr.left.size(), CV_16SC2, l_remapx, l_remapy);
             cv::fisheye::initUndistortRectifyMap(M2, D2, R2, P2, plr.right.size(), CV_16SC2, r_remapx, r_remapy);
             cv::remap(plr.left, left_rectified, l_remapx, l_remapy, cv::INTER_LINEAR);
@@ -736,6 +737,20 @@ void MainWindow::binoTimerHandler(){
 
             cv::resize(left_rectified, left_rectified, cv::Size(plr.left.cols/2 ,plr.left.rows/2));
             cv::resize(right_rectified, right_rectified, cv::Size(plr.right.cols/2 ,plr.right.rows/2));
+
+            canvas.create(left_rectified.size().height, left_rectified.size().width *2, CV_8UC1);
+            assert(left_resized.size() == right_resized.size());
+
+            cv::Mat roil = canvas( cv::Rect(0, 0, left_rectified.size().width, left_rectified.size().height) );
+            cv::Mat roir = canvas( cv::Rect(left_rectified.size().width, 0, right_rectified.size().width, right_rectified.size().height));
+            left_rectified.copyTo(roil);
+            right_rectified.copyTo(roir);
+
+            cvtColor(canvas, toShow, COLOR_GRAY2BGR);
+            int dist = floor(canvas.size().height / 10);
+            for(int i=1; i<10; ++i){
+                line(toShow, Point(0, i*dist), Point(toShow.size().width, i*dist), Scalar(0,255,0), 1, 8);
+            }
         }
         if(mySaveFlag){
             saveBinoImage(plr);
@@ -743,10 +758,8 @@ void MainWindow::binoTimerHandler(){
         }
     }
     pfmutex.unlock();
-    ui->Bino_left_rectified->setPixmap(QPixmap::fromImage(Mat2QImage(left_rectified)) );
-    ui->Bino_right_rectified->setPixmap(QPixmap::fromImage(Mat2QImage(right_rectified)) );
+    ui->Bino_left_rectified->setPixmap(QPixmap::fromImage(Mat2QImage(toShow)) );
     ui->Bino_left_rectified->adjustSize();
-    ui->Bino_right_rectified->adjustSize();
 
     ui->Bino_left_show->setPixmap(QPixmap::fromImage(Mat2QImage(left_resized)) );
     ui->Bino_right_show->setPixmap(QPixmap::fromImage(Mat2QImage(right_resized)) );
@@ -853,9 +866,6 @@ void MainWindow::on_pushButton_save_lists_clicked()
         }
     }
     ExpandData.close();
-
-
-
 }
 
 void MainWindow::on_Slider_y_valueChanged(int value)
@@ -979,6 +989,7 @@ void MainWindow::on_pushButton_open_bino_clicked()
         ui->pushButton_open_bino->setText("关闭双目");
     }else{		//close binocular camera
         ce_cam_capture_close();
+        ui->pushButton_open_bino->setText("打开双目");
     }
 }
 
@@ -1010,3 +1021,14 @@ void MainWindow::on_pushButton_start_calib_bino_clicked()
     myBinocularCalibration();
 }
 
+
+void MainWindow::on_pushButton_show_rectified_clicked()
+{
+    if(ui->pushButton_show_rectified->text()=="矫正效果"){
+        ui->pushButton_show_rectified->setText(tr("关闭效果"));
+        enable_rectify = true;
+    }else{
+        ui->pushButton_show_rectified->setText(tr("矫正效果"));
+        enable_rectify = false;
+    }
+}

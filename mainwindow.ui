@@ -518,27 +518,27 @@
        <widget class="QLabel" name="Bino_left_rectified">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>250</y>
-          <width>341</width>
+          <x>80</x>
+          <y>280</y>
+          <width>771</width>
           <height>211</height>
          </rect>
         </property>
         <property name="text">
-         <string>LeftRectified</string>
+         <string>Rectified</string>
         </property>
        </widget>
-       <widget class="QLabel" name="Bino_right_rectified">
+       <widget class="QPushButton" name="pushButton_show_rectified">
         <property name="geometry">
          <rect>
-          <x>490</x>
-          <y>270</y>
-          <width>341</width>
-          <height>211</height>
+          <x>150</x>
+          <y>640</y>
+          <width>91</width>
+          <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>RightRectified</string>
+         <string>矫正效果</string>
         </property>
        </widget>
       </widget>
