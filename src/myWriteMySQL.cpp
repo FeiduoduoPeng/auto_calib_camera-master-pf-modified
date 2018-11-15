@@ -1,5 +1,8 @@
 #include "myWriteMySQL.h"
 
+/***
+ * @ctype type of camera, choose from "bino_cam", "mono_cam" and "rgbd"
+ * */
 bool myWriteMySQL(const std::string &cuuid, const std::string &cmatrix, const std::string &ctype){
     using namespace std;
     string s( "insert into camera_params \

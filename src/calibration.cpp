@@ -8,6 +8,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "myWriteMySQL.h"
+
 using namespace cv;
 using namespace std;
 
@@ -210,6 +212,13 @@ static void saveCameraParams( const string& filename,
     fs << "distortion_coefficients" << distCoeffs;
 
     fs << "avg_reprojection_error" << totalAvgErr;
+    stringstream ss;
+    ss << "flags" << flags;
+    ss << "camera_matrix" << cameraMatrix;
+    ss << "distortion_coefficients" << distCoeffs;
+    ss << "avg_reprojection_error" << totalAvgErr;
+    myWriteMySQL("uuid=001", ss.str(), "mono_cam");
+
     if( !reprojErrs.empty() )
         fs << "per_view_reprojection_errors" << Mat(reprojErrs);
 

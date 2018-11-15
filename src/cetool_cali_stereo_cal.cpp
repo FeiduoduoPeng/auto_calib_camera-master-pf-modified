@@ -342,7 +342,7 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
     ss << "M1" << cameraMatrix[0] << "D1" << distCoeffs[0] <<
         "M2" << cameraMatrix[1] << "D2" << distCoeffs[1] <<
         "R" << R << "T" << T << "R1" << R1 << "R2" << R2 << "P1" << P1 << "P2" << P2 << "Q" << Q;
-    myWriteMySQL("uuid=000", ss.str(), "bino");
+    myWriteMySQL("uuid=000", ss.str(), "bino_cam");
 
     // OpenCV can handle left-right
     // or up-down camera arrangements

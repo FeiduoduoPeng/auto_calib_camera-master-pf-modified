@@ -12,8 +12,10 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 add_library(CEDRIVER_CONFIG src/cedriver_config.cpp)
 
-add_executable( cpp-example-calibration src/calibration.cpp )
-target_link_libraries( cpp-example-calibration ${OpenCV_LIBS} )
+add_executable( cpp-example-calibration src/calibration.cpp src/myWriteMySQL.cpp)
+target_link_libraries( cpp-example-calibration 
+                        ${OpenCV_LIBS}
+                        mysqlcppconn)
 
 add_executable(CETOOL_CALI_STEREO_CAL src/cetool_cali_stereo_cal.cpp src/myWriteMySQL.cpp)
 target_link_libraries(  CETOOL_CALI_STEREO_CAL 

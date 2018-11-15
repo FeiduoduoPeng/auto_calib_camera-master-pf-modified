@@ -7,12 +7,12 @@
 #include "communication.h"
 #include <QMessageBox>
 #include <QSettings>
-#include<QDebug>
+#include <QDebug>
 #include <stdint.h>
 #include <bits/stdc++.h>
 #include <vector>
 #include "dirent.h"
-#include<QDebug>
+#include <QDebug>
 #include <QTimer>
 #include "opencv2/opencv.hpp"
 #include <opencv2/core/core.hpp>

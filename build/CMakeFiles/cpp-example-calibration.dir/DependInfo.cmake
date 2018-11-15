@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/leisure/auto_calib_camera-master-pf-modified/src/calibration.cpp" "/home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.o"
+  "/home/leisure/auto_calib_camera-master-pf-modified/src/myWriteMySQL.cpp" "/home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

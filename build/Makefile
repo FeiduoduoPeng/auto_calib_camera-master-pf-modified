@@ -236,6 +236,7 @@ src/myWriteMySQL.o: src/myWriteMySQL.cpp.o
 
 # target to build an object file
 src/myWriteMySQL.cpp.o:
+	$(MAKE) -f CMakeFiles/cpp-example-calibration.dir/build.make CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.o
 	$(MAKE) -f CMakeFiles/CETOOL_CALI_STEREO_CAL.dir/build.make CMakeFiles/CETOOL_CALI_STEREO_CAL.dir/src/myWriteMySQL.cpp.o
 .PHONY : src/myWriteMySQL.cpp.o
 
@@ -245,6 +246,7 @@ src/myWriteMySQL.i: src/myWriteMySQL.cpp.i
 
 # target to preprocess a source file
 src/myWriteMySQL.cpp.i:
+	$(MAKE) -f CMakeFiles/cpp-example-calibration.dir/build.make CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.i
 	$(MAKE) -f CMakeFiles/CETOOL_CALI_STEREO_CAL.dir/build.make CMakeFiles/CETOOL_CALI_STEREO_CAL.dir/src/myWriteMySQL.cpp.i
 .PHONY : src/myWriteMySQL.cpp.i
 
@@ -254,6 +256,7 @@ src/myWriteMySQL.s: src/myWriteMySQL.cpp.s
 
 # target to generate assembly for a file
 src/myWriteMySQL.cpp.s:
+	$(MAKE) -f CMakeFiles/cpp-example-calibration.dir/build.make CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.s
 	$(MAKE) -f CMakeFiles/CETOOL_CALI_STEREO_CAL.dir/build.make CMakeFiles/CETOOL_CALI_STEREO_CAL.dir/src/myWriteMySQL.cpp.s
 .PHONY : src/myWriteMySQL.cpp.s
 
