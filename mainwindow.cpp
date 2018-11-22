@@ -19,6 +19,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <sstream>
+#include "calib3d.hpp"
+
 Ui::MainWindow *my_ui;
 extern std::mutex pfmutex;
 
@@ -35,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     my_ui=ui;
 
     binoTimer =  new QTimer(this);
+    servoTimer = new QTimer(this);
     color_image_list_file_name = "color_image_list_file.yaml";
     depth_image_list_file_name = "depth_image_list_file.yaml";
     color_calib_file_name = "color_calib_file.yml";
@@ -64,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QObject::connect(&thread, SIGNAL(send(QString)), this, SLOT(accept(QString)),Qt::BlockingQueuedConnection);
     QObject::connect(binoTimer, SIGNAL(timeout()), this, SLOT(binoTimerHandler()));
+    QObject::connect(servoTimer, SIGNAL(timeout()), this, SLOT(servoStop()));
 
     QStringList labels = QObject::trUtf8("X,Y").simplified().split(",");
     model->setHorizontalHeaderLabels(labels);
@@ -141,7 +145,6 @@ MainWindow::~MainWindow()
 }
 bool MainWindow::executeCMD(const char *cmd)
 {
-
     FILE *ptr;
     char buf_ps[1024];
     char ps[1024]={0};
@@ -177,6 +180,65 @@ bool loadCameraParams(string file_name,Mat &cameraMatrix, Mat &distCoeffs)
     {
         return false;
     }
+}
+
+/**
+* @input, image;
+* @output, error between fitting-plane and original points;
+*/
+double MainWindow::plane_fitting(std::string left_img_file, std::string right_img_file){
+    cv::Mat left_img =	cv::imread(left_img_file);
+    cv::Mat right_img =	cv::imread(right_img_file);
+
+    //rectify the image
+    cv::Mat l_remapx, l_remapy, r_remapx, r_remapy;
+    cv::Mat img_left_remap, img_right_remap;
+    cv::fisheye::initUndistortRectifyMap(M1, D1, R1, P1, left_img.size(), CV_16SC2, l_remapx, l_remapy);
+    cv::fisheye::initUndistortRectifyMap(M2, D2, R2, P2, right_img.size(), CV_16SC2, r_remapx, r_remapy);
+    cv::remap(left_img, img_left_remap, l_remapx, l_remapy, cv::INTER_LINEAR);
+    cv::remap(right_img, img_right_remap, r_remapx, r_remapy, cv::INTER_LINEAR);
+
+    //find chessboardcorner;
+    std::vector<cv::Point2d> corners_left, corners_right;
+    bool found = false;
+    found = cv::findChessboardCorners(img_left_remap,cv::Size(10,11), corners_left);
+    found = found && cv::findChessboardCorners(img_right_remap,cv::Size(10,11), corners_right);
+    cv::Mat myT1 = (cv::Mat_<double>(3,4) <<
+                    1,0,0,0,
+                    0,1,0,0,
+                    0,0,1,0);
+    cv::Mat myT2;
+    cv::hconcat(R,T,myT2);
+    cv::Mat pts_4d;
+    if(found){
+        assert(corners_left.size() == corners_right.size());
+    }
+
+    //calculate the 3d points;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    cloud->width = 10;
+    cloud->height =11;
+    cloud->points.resize(cloud->width * cloud->height);
+
+    cv::triangulatePoints(myT1, myT2, corners_left, corners_right, pts_4d);
+    std::vector<cv::Point3d> points;
+    for(int i=0; i<pts_4d.cols; ++i){
+        cv::Mat x = pts_4d.col(i);
+        x /= x.at<float>(3,0);
+        cv::Point3d p(
+                        x.at<float>(0,0),
+                        x.at<float>(1,0),
+                        x.at<float>(2,0)
+                    );
+        cloud->points[i].x = x.at<float>(0,0);
+        cloud->points[i].y = x.at<float>(1,0);
+        cloud->points[i].z = x.at<float>(2,0);
+        //points.push_back(p);
+    }
+    //fitting;
+    //calculate error;
+
+    return 0;
 }
 
 Mat calibrator(string calib_file,Mat view)//需要校正处理的图片
@@ -659,13 +721,34 @@ void MainWindow::on_pushButton_clicked()
 
 }
 
+void MainWindow::servoMoveForward(void){
+    int data[2];
+    data[0]=0;
+    Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+    servoTimer->start(servoDelay);
+}
+void MainWindow::servoMoveBackward(void){
+    int data[2];
+    data[0]=2;
+    Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+    servoTimer->start(servoDelay);
+}
+void MainWindow::servoStop(void){
+    servoTimer->stop();
+    int data[2];
+    data[0]=1;
+    Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+}
+
 void MainWindow::handleTimeout()
 {
-
     static float x,y;
+    static double position = 0;
 
     if(m_pTimer->isActive()){
-
+        if(position!=0){
+            //servoInit();
+        }
         if(run_step == 0)
         {
             if(ui->tableView->model()->index(list_num,0).data().isValid()&&ui->tableView->model()->index(list_num,1).data().isValid())
@@ -678,8 +761,17 @@ void MainWindow::handleTimeout()
             }
             else
             {
-                run_step = 3;
-                return ;
+                if(position!=3){
+                    position++;
+                    //ui->radioButton_list2
+
+                    run_step = 0;
+                    return ;
+                }
+                else{
+                    run_step = 3;
+                    return ;
+                }
             }
             set_pos(x,y);
             run_step = 1;
@@ -978,7 +1070,8 @@ void MainWindow::on_pushButton_open_bino_clicked()
 
             r = ce_cam_preprocess_init();
             if(r < 0)
-            {
+            {    void servoMoveForward(void);
+                void servoMoveBackward(void);
                 printf("celog: cam preprocess error \r\n");
             }else{
                 //ce_cam_showimg_init(plr);
@@ -1027,8 +1120,17 @@ void MainWindow::on_pushButton_show_rectified_clicked()
     if(ui->pushButton_show_rectified->text()=="矫正效果"){
         ui->pushButton_show_rectified->setText(tr("关闭效果"));
         enable_rectify = true;
+        double error_bino = plane_fitting("./imgL/left15.jpg", "./imgR/right15.jpg");
     }else{
         ui->pushButton_show_rectified->setText(tr("矫正效果"));
         enable_rectify = false;
     }
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    //int data[2];
+    //data[0]=1;
+    //Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+    servoMoveForward();
 }

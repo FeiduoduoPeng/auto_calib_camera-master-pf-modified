@@ -155,8 +155,6 @@ void Thread::run()
 
        oniIrStream.start();
         oniColorStream.stop();
-
-
     }
 
     if(show_channel ==COLOR_CHANNEL)

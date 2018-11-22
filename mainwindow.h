@@ -14,6 +14,14 @@
 #include "cedriver_config.h"
 #include "mycetool_calib_stereo_capture_img.h"
 
+#include <pcl/point_cloud.h>
+#include <pcl/ModelCoefficients.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/point_types.h>
+#include <pcl/sample_consensus/method_types.h>
+#include <pcl/sample_consensus/model_types.h>
+#include <pcl/segmentation/sac_segmentation.h>
+
 #define REC_WIDTH 5
 #define REC_HEIGHT 5
 
@@ -38,6 +46,7 @@ public:
     bool saveBinoImage(const lrImg &plr);
     bool myWriteXML(int total_img, std::string s="stereo_calib.xml");
     bool myBinocularCalibration();
+    double plane_fitting(std::string left_img_file, std::string right_img_file);
 
     ~MainWindow();
 
@@ -56,6 +65,10 @@ private slots:
     void on_pushButton_start_calib_clicked();
     void handleTimeout();
     void binoTimerHandler();
+    void servoMoveForward(void);
+    void servoMoveBackward(void);
+    void servoStop(void);
+    //void servoInit(void);
     void on_pushButton_read_lists_clicked();
     void on_pushButton_save_lists_clicked();
     void on_Slider_y_valueChanged(int value);
@@ -77,11 +90,14 @@ private slots:
 
     void on_pushButton_show_rectified_clicked();
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::MainWindow *ui;
     Thread thread;
     QTimer *m_pTimer;
     QTimer *binoTimer;
+    QTimer *servoTimer;
     string depth_calib_file_name;
     string color_calib_file_name;
     string depth_image_list_file_name;
@@ -103,7 +119,7 @@ private:
     cv::Mat R,T,R1,P1,R2,P2,Q;
     bool enable_rectify = false;
     bool matrix_rdy = false;
-
+    int servoDelay = 1000;
 };
 
 #endif // MAINWINDOW_H

@@ -8,7 +8,11 @@ QT       += core gui serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++11 \
+        link_pkgconfig
+
+PKGCONFIG += eigen3
+
 TARGET = calib_camera
 TEMPLATE = app
 
@@ -39,7 +43,9 @@ FORMS    += mainwindow.ui
 
 INCLUDEPATH += /usr/local/include \
 /usr/local/include/opencv \
-/usr/local/include/opencv2
+/usr/local/include/opencv2 \
+/usr/include/pcl-1.7 \
+/usr/include/eigen3
 
 
 LIBS += /usr/local/lib/libopencv_calib3d.so\
@@ -65,6 +71,7 @@ LIBS += /usr/local/lib/libopencv_calib3d.so\
 
 LIBS += -L/usr/local/lib
 LIBS += -lmysqlcppconn
+LIBS += -L/usr/lib
 
 
 #INCLUDEPATH += $$(OPENNI2_INCLUDE)
@@ -74,3 +81,4 @@ INCLUDEPATH += /usr/include/openni2
 LIBS += -L/usr/lib
 
 LIBS += -lOpenNI2 -lusb-1.0 -lGL -lGLU -lglut
+LIBS += -lboost_system

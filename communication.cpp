@@ -54,19 +54,16 @@ Moto_Data_inf_TypeDef Moto_Data_inf;
 /////////////////////////////////////////////////////////////////////////////////////
 	 if(f.send_time)//时间同步发送
 	{
-
 		f.send_time = 0;
 	}
 /////////////////////////////////////////////////////////////////////////////////////
 	else if(f.send_pid1)
 	{
 		f.send_pid1 = 0;
-
     }
 /////////////////////////////////////////////////////////////////////////////////////
 	else if(f.send_pid2)
 	{
-		
 	}
 /////////////////////////////////////////////////////////////////////////////////////
 }
@@ -163,7 +160,17 @@ void Motor_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
         memcpy(&data, data_buf + 4,8);
         my_ui->lcdNumber_imu_x->display(data[1]);
         my_ui->lcdnumber_imu_y->display(data[0]);
-
+    }
+    else if(*(data_buf+2) == 0x15){
+        float data[2];
+        memcpy(&data, data_buf + 4,8);
+        //if reach target point, stop servo
+        if(data[0] ==1){
+            int data[2];
+            data[0]=1;
+            Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+        }
+        //std::cout<<data[0]<<std::endl;
     }
     else if (*(data_buf + 2) == CMD_ADD_GOODS_KEY)
     {
@@ -171,7 +178,6 @@ void Motor_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
         memcpy(&data, data_buf + 4,1);
         data=CMD_ADD_GOODS_KEY;
         Motor_DT_Send_Struct(&data,1 ,0x12);
-
     }
 }
 
@@ -180,7 +186,6 @@ void Motor_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
   * @param  *Struct_Data  要发送的结构体
             length 结构体大小
              function     功能字
-			 
   * @retval void
   */
 void Motor_DT_Send_Struct(void *Struct_Data,int length ,u8 function)
