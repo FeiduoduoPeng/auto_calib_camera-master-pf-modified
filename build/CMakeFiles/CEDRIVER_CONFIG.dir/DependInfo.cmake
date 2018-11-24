@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/leisure/auto_calib_camera-master-pf-modified/src/cedriver_config.cpp" "/home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o"
+  "/home/leisure/auto_calib_camera-master-pf-modified-ok/src/cedriver_config.cpp" "/home/leisure/auto_calib_camera-master-pf-modified-ok/build/CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

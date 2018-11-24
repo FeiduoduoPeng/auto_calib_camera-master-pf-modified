@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/leisure/auto_calib_camera-master-pf-modified
+CMAKE_SOURCE_DIR = /home/leisure/auto_calib_camera-master-pf-modified-ok
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/leisure/auto_calib_camera-master-pf-modified/build
+CMAKE_BINARY_DIR = /home/leisure/auto_calib_camera-master-pf-modified-ok/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/cpp-example-calibration.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/cpp-example-calibration.dir/flags.make
 
 CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.o: CMakeFiles/cpp-example-calibration.dir/flags.make
 CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.o: ../src/calibration.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.o -c /home/leisure/auto_calib_camera-master-pf-modified/src/calibration.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified-ok/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.o -c /home/leisure/auto_calib_camera-master-pf-modified-ok/src/calibration.cpp
 
 CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/leisure/auto_calib_camera-master-pf-modified/src/calibration.cpp > CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/leisure/auto_calib_camera-master-pf-modified-ok/src/calibration.cpp > CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.i
 
 CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/leisure/auto_calib_camera-master-pf-modified/src/calibration.cpp -o CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/leisure/auto_calib_camera-master-pf-modified-ok/src/calibration.cpp -o CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.s
 
 CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/cpp-example-calibration.dir/src/calibration.cpp.o.provides.build: CMa
 
 CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.o: CMakeFiles/cpp-example-calibration.dir/flags.make
 CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.o: ../src/myWriteMySQL.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.o -c /home/leisure/auto_calib_camera-master-pf-modified/src/myWriteMySQL.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified-ok/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.o -c /home/leisure/auto_calib_camera-master-pf-modified-ok/src/myWriteMySQL.cpp
 
 CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/leisure/auto_calib_camera-master-pf-modified/src/myWriteMySQL.cpp > CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/leisure/auto_calib_camera-master-pf-modified-ok/src/myWriteMySQL.cpp > CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.i
 
 CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/leisure/auto_calib_camera-master-pf-modified/src/myWriteMySQL.cpp -o CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/leisure/auto_calib_camera-master-pf-modified-ok/src/myWriteMySQL.cpp -o CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.s
 
 CMakeFiles/cpp-example-calibration.dir/src/myWriteMySQL.cpp.o.requires:
 
@@ -162,7 +162,7 @@ cpp-example-calibration: /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv_objdete
 cpp-example-calibration: /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv_imgproc3.so.3.3.1
 cpp-example-calibration: /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv_core3.so.3.3.1
 cpp-example-calibration: CMakeFiles/cpp-example-calibration.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable cpp-example-calibration"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified-ok/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable cpp-example-calibration"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/cpp-example-calibration.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -180,6 +180,6 @@ CMakeFiles/cpp-example-calibration.dir/clean:
 .PHONY : CMakeFiles/cpp-example-calibration.dir/clean
 
 CMakeFiles/cpp-example-calibration.dir/depend:
-	cd /home/leisure/auto_calib_camera-master-pf-modified/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/leisure/auto_calib_camera-master-pf-modified /home/leisure/auto_calib_camera-master-pf-modified /home/leisure/auto_calib_camera-master-pf-modified/build /home/leisure/auto_calib_camera-master-pf-modified/build /home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles/cpp-example-calibration.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/leisure/auto_calib_camera-master-pf-modified-ok/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/leisure/auto_calib_camera-master-pf-modified-ok /home/leisure/auto_calib_camera-master-pf-modified-ok /home/leisure/auto_calib_camera-master-pf-modified-ok/build /home/leisure/auto_calib_camera-master-pf-modified-ok/build /home/leisure/auto_calib_camera-master-pf-modified-ok/build/CMakeFiles/cpp-example-calibration.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/cpp-example-calibration.dir/depend
 

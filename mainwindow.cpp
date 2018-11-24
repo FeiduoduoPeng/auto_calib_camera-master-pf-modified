@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     binoTimer =  new QTimer(this);
     servoTimer = new QTimer(this);
+    servoInitTimer = new QTimer(this);
     color_image_list_file_name = "color_image_list_file.yaml";
     depth_image_list_file_name = "depth_image_list_file.yaml";
     color_calib_file_name = "color_calib_file.yml";
@@ -68,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&thread, SIGNAL(send(QString)), this, SLOT(accept(QString)),Qt::BlockingQueuedConnection);
     QObject::connect(binoTimer, SIGNAL(timeout()), this, SLOT(binoTimerHandler()));
     QObject::connect(servoTimer, SIGNAL(timeout()), this, SLOT(servoStop()));
+    QObject::connect(servoInitTimer, SIGNAL(timeout()), this, SLOT(servoInitStop()));
 
     QStringList labels = QObject::trUtf8("X,Y").simplified().split(",");
     model->setHorizontalHeaderLabels(labels);
@@ -220,23 +222,24 @@ double MainWindow::plane_fitting(std::string left_img_file, std::string right_im
     cloud->height =11;
     cloud->points.resize(cloud->width * cloud->height);
 
-    cv::triangulatePoints(myT1, myT2, corners_left, corners_right, pts_4d);
-    std::vector<cv::Point3d> points;
-    for(int i=0; i<pts_4d.cols; ++i){
-        cv::Mat x = pts_4d.col(i);
-        x /= x.at<float>(3,0);
-        cv::Point3d p(
-                        x.at<float>(0,0),
-                        x.at<float>(1,0),
-                        x.at<float>(2,0)
-                    );
-        cloud->points[i].x = x.at<float>(0,0);
-        cloud->points[i].y = x.at<float>(1,0);
-        cloud->points[i].z = x.at<float>(2,0);
-        //points.push_back(p);
-    }
+    //cv::triangulatePoints(myT1, myT2, corners_left, corners_right, pts_4d);
+    //std::vector<cv::Point3d> points;
+    //for(int i=0; i<pts_4d.cols; ++i){
+    //    cv::Mat x = pts_4d.col(i);
+    //    x /= x.at<float>(3,0);
+    //    cv::Point3d p(
+    //                    x.at<float>(0,0),
+    //                    x.at<float>(1,0),
+    //                    x.at<float>(2,0)
+    //                );
+    //    cloud->points[i].x = x.at<float>(0,0);
+    //    cloud->points[i].y = x.at<float>(1,0);
+    //    cloud->points[i].z = x.at<float>(2,0);
+    //    //points.push_back(p);
+    //}
     //fitting;
     //calculate error;
+    std::cout<<"ok"<<std::endl;
 
     return 0;
 }
@@ -561,7 +564,7 @@ bool MainWindow::myBinocularCalibration(){
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("LD_LIBRARY_PATH","/usr/local/lib");
     proc->setProcessEnvironment(env);
-    proc->start("./CETOOL_CALI_STEREO_CAL -w=10 -h=11 stereo_calib.xml ");	//it's working!
+    proc->start("./CETOOL_CALI_STEREO_CAL -w=10 -h=11 -s=30 stereo_calib.xml ");	//it's working!
 
     std::cout<<"in calibration"<<std::endl;
     return true;
@@ -722,12 +725,14 @@ void MainWindow::on_pushButton_clicked()
 }
 
 void MainWindow::servoMoveForward(void){
+    m_pTimer->stop();
     int data[2];
     data[0]=0;
     Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
     servoTimer->start(servoDelay);
 }
 void MainWindow::servoMoveBackward(void){
+    m_pTimer->stop();
     int data[2];
     data[0]=2;
     Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
@@ -738,17 +743,21 @@ void MainWindow::servoStop(void){
     int data[2];
     data[0]=1;
     Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+    m_pTimer->start(CheckDurationMs);
+}
+void MainWindow::servoInitStop(void){
+    servoInitTimer->stop();
+    int data[2];
+    data[0]=1;
+    Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
 }
 
 void MainWindow::handleTimeout()
 {
     static float x,y;
-    static double position = 0;
+    static int position = 0;
 
     if(m_pTimer->isActive()){
-        if(position!=0){
-            //servoInit();
-        }
         if(run_step == 0)
         {
             if(ui->tableView->model()->index(list_num,0).data().isValid()&&ui->tableView->model()->index(list_num,1).data().isValid())
@@ -761,17 +770,37 @@ void MainWindow::handleTimeout()
             }
             else
             {
-                if(position!=3){
-                    position++;
-                    //ui->radioButton_list2
-
+                if(position==0){
+                    position = 1;
+                    ui->radioButton_list2->setChecked(true);
+                    on_radioButton_list2_clicked();
+                    servoMoveForward();
                     run_step = 0;
+                    list_num = 0;
                     return ;
                 }
-                else{
+                else if(position==1){
+                    position = 2;
+                    ui->radioButton_list3->setChecked(true);
+                    on_radioButton_list3_clicked();
+                    servoMoveForward();
+                    run_step = 0;
+                    list_num = 0;
+                    return ;
+                }
+                else if(position==2){
+                    position = 0;
+                    on_radioButton_list1_clicked();
                     run_step = 3;
                     return ;
                 }
+                else{
+                    assert(false);
+                }
+                //else{
+                //    run_step = 3;
+                //    return ;
+                //}
             }
             set_pos(x,y);
             run_step = 1;
@@ -781,18 +810,18 @@ void MainWindow::handleTimeout()
             if(abs(ui->lcdNumber_imu_x->value() - x)<2.0 && abs(ui->lcdnumber_imu_y->value() - y)<2.0)
             {
                 run_step = 2;
+                std::cout<<"reach"<<std::endl;
             }
         }
         else if(run_step == 2)
         {
             if(ui->tabWidget->currentIndex()==0){
                 thread.SetImageSave();
-                run_step = 0;
             }
             else if(ui->tabWidget->currentIndex()==1){
                 on_pushButton_save_bino_clicked();
-                run_step = 0;
             }
+            run_step = 0;
         }
         else if(run_step == 3)
         {
@@ -867,7 +896,7 @@ void MainWindow::on_pushButton_start_calib_clicked()
     {
         m_pTimer = new QTimer(this);
         connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
-        m_pTimer->start(1000);
+        m_pTimer->start(CheckDurationMs);
         ui->pushButton_start_calib->setText(tr("停止"));
     }
     else
@@ -1120,7 +1149,7 @@ void MainWindow::on_pushButton_show_rectified_clicked()
     if(ui->pushButton_show_rectified->text()=="矫正效果"){
         ui->pushButton_show_rectified->setText(tr("关闭效果"));
         enable_rectify = true;
-        double error_bino = plane_fitting("./imgL/left15.jpg", "./imgR/right15.jpg");
+        double error_bino = plane_fitting("./imgL/left4.jpg", "./imgR/right4.jpg");
     }else{
         ui->pushButton_show_rectified->setText(tr("矫正效果"));
         enable_rectify = false;
@@ -1129,8 +1158,27 @@ void MainWindow::on_pushButton_show_rectified_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    //int data[2];
-    //data[0]=1;
-    //Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
-    servoMoveForward();
+    int data[2];
+    data[0]=1;
+    Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+    //servoMoveForward();
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+}
+
+void MainWindow::on_pushButton_init_clicked()
+{
+    int data[2];
+    data[0]=2;
+    Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+    servoInitTimer->start(2*servoDelay);
+}
+
+void MainWindow::on_pushButton_move_forward_clicked()
+{
+    int data[2];
+    data[0]=0;
+    Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
 }

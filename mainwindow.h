@@ -68,7 +68,7 @@ private slots:
     void servoMoveForward(void);
     void servoMoveBackward(void);
     void servoStop(void);
-    //void servoInit(void);
+    void servoInitStop(void);
     void on_pushButton_read_lists_clicked();
     void on_pushButton_save_lists_clicked();
     void on_Slider_y_valueChanged(int value);
@@ -92,12 +92,19 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_init_clicked();
+
+    void on_pushButton_move_forward_clicked();
+
 private:
     Ui::MainWindow *ui;
     Thread thread;
     QTimer *m_pTimer;
     QTimer *binoTimer;
     QTimer *servoTimer;
+    QTimer *servoInitTimer;
     string depth_calib_file_name;
     string color_calib_file_name;
     string depth_image_list_file_name;
@@ -111,6 +118,7 @@ private:
     int list_num = 0;
     QStandardItemModel* model = new QStandardItemModel();
     QStandardItemModel* model2 = new QStandardItemModel();
+    int CheckDurationMs = 400;
 
     /*for rectify*/
     cv::FileStorage fs_in;//("./config/intrinsics.yml", cv::FileStorage::READ);
@@ -119,7 +127,7 @@ private:
     cv::Mat R,T,R1,P1,R2,P2,Q;
     bool enable_rectify = false;
     bool matrix_rdy = false;
-    int servoDelay = 1000;
+    int servoDelay = 15000;
 };
 
 #endif // MAINWINDOW_H

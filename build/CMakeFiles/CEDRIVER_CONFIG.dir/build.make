@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/leisure/auto_calib_camera-master-pf-modified
+CMAKE_SOURCE_DIR = /home/leisure/auto_calib_camera-master-pf-modified-ok
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/leisure/auto_calib_camera-master-pf-modified/build
+CMAKE_BINARY_DIR = /home/leisure/auto_calib_camera-master-pf-modified-ok/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/CEDRIVER_CONFIG.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/CEDRIVER_CONFIG.dir/flags.make
 
 CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o: CMakeFiles/CEDRIVER_CONFIG.dir/flags.make
 CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o: ../src/cedriver_config.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o -c /home/leisure/auto_calib_camera-master-pf-modified/src/cedriver_config.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified-ok/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o -c /home/leisure/auto_calib_camera-master-pf-modified-ok/src/cedriver_config.cpp
 
 CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/leisure/auto_calib_camera-master-pf-modified/src/cedriver_config.cpp > CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/leisure/auto_calib_camera-master-pf-modified-ok/src/cedriver_config.cpp > CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.i
 
 CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/leisure/auto_calib_camera-master-pf-modified/src/cedriver_config.cpp -o CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/leisure/auto_calib_camera-master-pf-modified-ok/src/cedriver_config.cpp -o CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.s
 
 CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o.requires:
 
@@ -91,7 +91,7 @@ CEDRIVER_CONFIG_EXTERNAL_OBJECTS =
 libCEDRIVER_CONFIG.a: CMakeFiles/CEDRIVER_CONFIG.dir/src/cedriver_config.cpp.o
 libCEDRIVER_CONFIG.a: CMakeFiles/CEDRIVER_CONFIG.dir/build.make
 libCEDRIVER_CONFIG.a: CMakeFiles/CEDRIVER_CONFIG.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libCEDRIVER_CONFIG.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/leisure/auto_calib_camera-master-pf-modified-ok/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libCEDRIVER_CONFIG.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/CEDRIVER_CONFIG.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/CEDRIVER_CONFIG.dir/link.txt --verbose=$(VERBOSE)
 
@@ -109,6 +109,6 @@ CMakeFiles/CEDRIVER_CONFIG.dir/clean:
 .PHONY : CMakeFiles/CEDRIVER_CONFIG.dir/clean
 
 CMakeFiles/CEDRIVER_CONFIG.dir/depend:
-	cd /home/leisure/auto_calib_camera-master-pf-modified/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/leisure/auto_calib_camera-master-pf-modified /home/leisure/auto_calib_camera-master-pf-modified /home/leisure/auto_calib_camera-master-pf-modified/build /home/leisure/auto_calib_camera-master-pf-modified/build /home/leisure/auto_calib_camera-master-pf-modified/build/CMakeFiles/CEDRIVER_CONFIG.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/leisure/auto_calib_camera-master-pf-modified-ok/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/leisure/auto_calib_camera-master-pf-modified-ok /home/leisure/auto_calib_camera-master-pf-modified-ok /home/leisure/auto_calib_camera-master-pf-modified-ok/build /home/leisure/auto_calib_camera-master-pf-modified-ok/build /home/leisure/auto_calib_camera-master-pf-modified-ok/build/CMakeFiles/CEDRIVER_CONFIG.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/CEDRIVER_CONFIG.dir/depend
 

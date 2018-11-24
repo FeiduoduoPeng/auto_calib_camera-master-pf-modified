@@ -74,11 +74,11 @@ LIBS += -lmysqlcppconn
 LIBS += -L/usr/lib
 
 
-#INCLUDEPATH += $$(OPENNI2_INCLUDE)
-#LIBS += -L$$(OPENNI2_REDIST)
+INCLUDEPATH += $$(OPENNI2_INCLUDE)
+LIBS += -L$$(OPENNI2_REDIST)
 
-INCLUDEPATH += /usr/include/openni2
-LIBS += -L/usr/lib
+#INCLUDEPATH += /usr/include/openni2
+#LIBS += -L/usr/lib
 
 LIBS += -lOpenNI2 -lusb-1.0 -lGL -lGLU -lglut
 LIBS += -lboost_system

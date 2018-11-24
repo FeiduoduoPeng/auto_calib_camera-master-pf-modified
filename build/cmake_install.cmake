@@ -1,4 +1,4 @@
-# Install script for directory: /home/leisure/auto_calib_camera-master-pf-modified
+# Install script for directory: /home/leisure/auto_calib_camera-master-pf-modified-ok
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/leisure/auto_calib_camera-master-pf-modified/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/leisure/auto_calib_camera-master-pf-modified-ok/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -6,5 +6,5 @@ CXX_FLAGS =  -pthread -g -std=c++0x -g
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/leisure/auto_calib_camera-master-pf-modified/include -isystem /opt/ros/kinetic/include/opencv-3.3.1-dev -isystem /opt/ros/kinetic/include/opencv-3.3.1-dev/opencv 
+CXX_INCLUDES = -I/home/leisure/auto_calib_camera-master-pf-modified-ok/include -isystem /opt/ros/kinetic/include/opencv-3.3.1-dev -isystem /opt/ros/kinetic/include/opencv-3.3.1-dev/opencv 
 

@@ -678,14 +678,40 @@
        <widget class="QPushButton" name="pushButton_2">
         <property name="geometry">
          <rect>
-          <x>290</x>
-          <y>560</y>
+          <x>420</x>
+          <y>510</y>
           <width>91</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>移动</string>
+         <string>停止移动</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_init">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>470</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>标定板回退</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_move_forward">
+        <property name="geometry">
+         <rect>
+          <x>520</x>
+          <y>470</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>标定板前进</string>
         </property>
        </widget>
       </widget>

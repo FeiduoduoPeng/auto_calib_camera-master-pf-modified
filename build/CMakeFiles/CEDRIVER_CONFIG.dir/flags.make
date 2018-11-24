@@ -6,5 +6,5 @@ CXX_FLAGS =  -pthread -g -std=c++0x -g
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/leisure/auto_calib_camera-master-pf-modified/include 
+CXX_INCLUDES = -I/home/leisure/auto_calib_camera-master-pf-modified-ok/include 
 
