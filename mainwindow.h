@@ -22,6 +22,11 @@
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/segmentation/sac_segmentation.h>
 
+#include "opencv2/opencv.hpp"
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
 #define REC_WIDTH 5
 #define REC_HEIGHT 5
 
@@ -47,6 +52,7 @@ public:
     bool myWriteXML(int total_img, std::string s="stereo_calib.xml");
     bool myBinocularCalibration();
     double plane_fitting(std::string left_img_file, std::string right_img_file);
+    cv::Point2d pixel2cam(const cv::Point2d &p, const cv::Mat &K);
 
     ~MainWindow();
 

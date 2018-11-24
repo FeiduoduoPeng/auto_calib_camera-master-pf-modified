@@ -70,8 +70,8 @@ LIBS += /usr/local/lib/libopencv_calib3d.so\
 
 
 LIBS += -L/usr/local/lib
-LIBS += -lmysqlcppconn
 LIBS += -L/usr/lib
+LIBS += -lmysqlcppconn
 
 
 INCLUDEPATH += $$(OPENNI2_INCLUDE)
@@ -82,3 +82,4 @@ LIBS += -L$$(OPENNI2_REDIST)
 
 LIBS += -lOpenNI2 -lusb-1.0 -lGL -lGLU -lglut
 LIBS += -lboost_system
+LIBS += -lpcl_io -lpcl_common -lpcl_segmentation

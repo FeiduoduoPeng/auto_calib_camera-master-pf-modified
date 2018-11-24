@@ -14,10 +14,7 @@
 #include "dirent.h"
 #include <QDebug>
 #include <QTimer>
-#include "opencv2/opencv.hpp"
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+
 #include <sstream>
 #include "calib3d.hpp"
 
@@ -98,28 +95,28 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     ui->tableView_2->show();
 
-    fs_in = cv::FileStorage("./config/intrinsics.yml", cv::FileStorage::READ);
-    fs_ex = cv::FileStorage("./config/extrinsics.yml", cv::FileStorage::READ);
-    /******read the xxtrinsics matrix to rectify image*******/
-    if( (!fs_in.isOpened()) || (!fs_ex.isOpened()) ){
-        printf("Failed to open file xxtrinsic.yml");
-        matrix_rdy = false;
-    }
-    else{
-        fs_in["M1"] >> M1;
-        fs_in["D1"] >> D1;
-        fs_in["M2"] >> M2;
-        fs_in["D2"] >> D2;
+    //fs_in = cv::FileStorage("./config/intrinsics.yml", cv::FileStorage::READ);
+    //fs_ex = cv::FileStorage("./config/extrinsics.yml", cv::FileStorage::READ);
+    ///******read the xxtrinsics matrix to rectify image*******/
+    //if( (!fs_in.isOpened()) || (!fs_ex.isOpened()) ){
+    //    printf("Failed to open file xxtrinsic.yml");
+    //    matrix_rdy = false;
+    //}
+    //else{
+    //    fs_in["M1"] >> M1;
+    //    fs_in["D1"] >> D1;
+    //    fs_in["M2"] >> M2;
+    //    fs_in["D2"] >> D2;
 
-        fs_ex["R"]	>> R;
-        fs_ex["T"]	>> T;
-        fs_ex["R1"]	>> R1;
-        fs_ex["R2"]	>> R2;
-        fs_ex["P1"]	>> P1;
-        fs_ex["P2"]	>> P2;
-        fs_ex["Q"]	>> Q;
-        matrix_rdy = true;
-    }
+    //    fs_ex["R"]	>> R;
+    //    fs_ex["T"]	>> T;
+    //    fs_ex["R1"]	>> R1;
+    //    fs_ex["R2"]	>> R2;
+    //    fs_ex["P1"]	>> P1;
+    //    fs_ex["P2"]	>> P2;
+    //    fs_ex["Q"]	>> Q;
+    //    matrix_rdy = true;
+    //}
 
 
     /************************************************************/
@@ -183,6 +180,12 @@ bool loadCameraParams(string file_name,Mat &cameraMatrix, Mat &distCoeffs)
         return false;
     }
 }
+cv::Point2d MainWindow::pixel2cam(const cv::Point2d &p, const cv::Mat &K){
+    return cv::Point2d(
+                (p.x - K.at<double>(0,2)) / K.at<double>(0,0),
+                (p.y - K.at<double>(1,2)) / K.at<double>(1,1)
+                );
+}
 
 /**
 * @input, image;
@@ -201,45 +204,89 @@ double MainWindow::plane_fitting(std::string left_img_file, std::string right_im
     cv::remap(right_img, img_right_remap, r_remapx, r_remapy, cv::INTER_LINEAR);
 
     //find chessboardcorner;
+    //std::vector<cv::Point2f> corners_left, corners_right;
     std::vector<cv::Point2d> corners_left, corners_right;
     bool found = false;
     found = cv::findChessboardCorners(img_left_remap,cv::Size(10,11), corners_left);
     found = found && cv::findChessboardCorners(img_right_remap,cv::Size(10,11), corners_right);
+    if(found){
+        assert(corners_left.size() == corners_right.size());
+        //cv::drawChessboardCorners(img_left_remap, cv::Size(10,11), corners_left, true);
+        //cv::imshow("left: ", img_left_remap);
+        //cv::waitKey(200);
+
+        //for(int i=0; i<corners_left.size(); ++i){
+        //    cout<<"left: "<<corners_left[i].x<<" "<<corners_left[i].y<<endl;
+        //    cout<<"right: "<<corners_right[i].x<<" "<<corners_right[i].y<<endl;
+        //}
+    }
+    for(int i=0; i<corners_left.size(); ++i){
+        corners_left[i] = pixel2cam(corners_left[i],M1);
+        corners_right[i] = pixel2cam(corners_right[i],M2);
+    }
+
     cv::Mat myT1 = (cv::Mat_<double>(3,4) <<
                     1,0,0,0,
                     0,1,0,0,
                     0,0,1,0);
     cv::Mat myT2;
+    //cv::Mat myT2 = (cv::Mat_<double>(3,4) <<
+    //                R.at<double>(0,0), R.at<double>(0,1), R.at<double>(0,2),  T.at<double>(0,0),
+    //                R.at<double>(1,0), R.at<double>(1,1), R.at<double>(1,2),  T.at<double>(1,0),
+    //                R.at<double>(2,0), R.at<double>(2,1), R.at<double>(2,2),  T.at<double>(2,0) );
     cv::hconcat(R,T,myT2);
+    assert(myT1.cols==myT2.cols && myT1.rows==myT2.rows);
     cv::Mat pts_4d;
-    if(found){
-        assert(corners_left.size() == corners_right.size());
-    }
+    cv::triangulatePoints(myT1, myT2, corners_left, corners_right, pts_4d);
 
-    //calculate the 3d points;
+    //calculate the 3d points, and create PointCloud
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
     cloud->width = 10;
     cloud->height =11;
     cloud->points.resize(cloud->width * cloud->height);
+    for(int i=0; i<pts_4d.cols; ++i){
+        cv::Mat x = pts_4d.col(i);
+        x /= x.at<double>(3,0);
+        cloud->points[i].x = x.at<double>(0,0);
+        cloud->points[i].y = x.at<double>(1,0);
+        cloud->points[i].z = x.at<double>(2,0);
+    }
+    pcl::io::savePCDFileBinary("map.pcd", *cloud);
 
-    //cv::triangulatePoints(myT1, myT2, corners_left, corners_right, pts_4d);
-    //std::vector<cv::Point3d> points;
-    //for(int i=0; i<pts_4d.cols; ++i){
-    //    cv::Mat x = pts_4d.col(i);
-    //    x /= x.at<float>(3,0);
-    //    cv::Point3d p(
-    //                    x.at<float>(0,0),
-    //                    x.at<float>(1,0),
-    //                    x.at<float>(2,0)
-    //                );
-    //    cloud->points[i].x = x.at<float>(0,0);
-    //    cloud->points[i].y = x.at<float>(1,0);
-    //    cloud->points[i].z = x.at<float>(2,0);
-    //    //points.push_back(p);
-    //}
-    //fitting;
+    /***************fitting*******************/
+    pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+    pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
+    // Create the segmentation object
+    pcl::SACSegmentation<pcl::PointXYZ> seg;
+    // Optional
+    seg.setOptimizeCoefficients (true);
+    // Mandatory
+    seg.setModelType (pcl::SACMODEL_PLANE);
+    seg.setMethodType (pcl::SAC_RANSAC);
+    seg.setDistanceThreshold (5);
+    seg.setInputCloud (cloud);
+    seg.segment (*inliers, *coefficients);
+
+    if (inliers->indices.size () == 0)
+    {
+      PCL_ERROR ("Could not estimate a planar model for the given dataset.");
+      return (-1);
+    }
+
+    std::cout << "Model coefficients: " << coefficients->values[0] << " "
+                                        << coefficients->values[1] << " "
+                                        << coefficients->values[2] << " "
+                                        << coefficients->values[3] << std::endl;
+    std::cout << "Model inliers: " << inliers->indices.size () << std::endl;
+
     //calculate error;
-    std::cout<<"ok"<<std::endl;
+    double estimateDist =  coefficients->values[3] /
+            sqrt(
+                pow(coefficients->values[0],2) +
+                pow(coefficients->values[1],2) +
+                pow(coefficients->values[2],2)
+            );
+    std::cout<<"distance: "<< estimateDist <<std::endl;
 
     return 0;
 }
@@ -1146,10 +1193,33 @@ void MainWindow::on_pushButton_start_calib_bino_clicked()
 
 void MainWindow::on_pushButton_show_rectified_clicked()
 {
+     fs_in = cv::FileStorage("./config/intrinsics.yml", cv::FileStorage::READ);
+     fs_ex = cv::FileStorage("./config/extrinsics.yml", cv::FileStorage::READ);
+     /******read the xxtrinsics matrix to rectify image*******/
+     if( (!fs_in.isOpened()) || (!fs_ex.isOpened()) ){
+         printf("Failed to open file xxtrinsic.yml");
+         matrix_rdy = false;
+     }
+     else{
+         fs_in["M1"] >> M1;
+         fs_in["D1"] >> D1;
+         fs_in["M2"] >> M2;
+         fs_in["D2"] >> D2;
+
+         fs_ex["R"]	>> R;
+         fs_ex["T"]	>> T;
+         fs_ex["R1"] >> R1;
+         fs_ex["R2"] >> R2;
+         fs_ex["P1"] >> P1;
+         fs_ex["P2"] >> P2;
+         fs_ex["Q"]	>> Q;
+         matrix_rdy = true;
+     }
+
     if(ui->pushButton_show_rectified->text()=="矫正效果"){
         ui->pushButton_show_rectified->setText(tr("关闭效果"));
         enable_rectify = true;
-        double error_bino = plane_fitting("./imgL/left4.jpg", "./imgR/right4.jpg");
+        double error_bino = plane_fitting("./imgL/left0.jpg", "./imgR/right0.jpg");
     }else{
         ui->pushButton_show_rectified->setText(tr("矫正效果"));
         enable_rectify = false;
