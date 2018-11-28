@@ -521,7 +521,9 @@ main.o: main.cpp mainwindow.h \
 		include/cedriver_global_config.h \
 		global.h \
 		include/cedriver_config.h \
-		include/mycetool_calib_stereo_capture_img.h
+		include/mycetool_calib_stereo_capture_img.h \
+		communication.h \
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainwindow.o: mainwindow.cpp mainwindow.h \

@@ -406,15 +406,12 @@ static void *ce_cam_capture(void *pUserPara)
 
         if((pass == 1)&&(ce_cam_rst_flag_left == false)&&(ce_cam_rst_flag_right == false))
         {
-
             img_pkg *timg_pkg_giveup = NULL;
 
             if (0 == tlist->push(timg_pkg, timg_pkg_giveup, 30))
             {
                 delete timg_pkg_giveup;
             }
-                    
-
         }
         else
         {

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "communication.h"
 #include <QApplication>
 
 

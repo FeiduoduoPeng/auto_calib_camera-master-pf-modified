@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <QSerialPort>
+#include <QTimer>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #define  B_TIME_TO_SEND            0x01
@@ -34,6 +35,7 @@
 #define MOTO_MODE_RUN_POSATION_SPEED_PID               0x15
 #define MOTO_MODE_RUN_POSATION_SPEED_CURRENT_PID       0x16
 
+extern bool ReachFlag;
 typedef enum {
    init_system_data_error    =1,
    Jack_door_init_error,
@@ -194,7 +196,6 @@ void Motor_DT_Send_PID(unsigned char group,float p1_p,float p1_i,float p1_d,floa
 ,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d);
 void set_pos(float x,float y);
 void mytest();
-
 
 #endif
 

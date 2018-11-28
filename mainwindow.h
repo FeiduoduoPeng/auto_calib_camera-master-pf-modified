@@ -75,6 +75,7 @@ private slots:
     void servoMoveBackward(void);
     void servoStop(void);
     void servoInitStop(void);
+    void recoverCheckTimerSlot(void);
     void on_pushButton_read_lists_clicked();
     void on_pushButton_save_lists_clicked();
     void on_Slider_y_valueChanged(int value);
@@ -104,10 +105,11 @@ private slots:
 
     void on_pushButton_move_forward_clicked();
 
+    void on_pushButton_backward_clicked();
+
 private:
     Ui::MainWindow *ui;
     Thread thread;
-    QTimer *m_pTimer;
     QTimer *binoTimer;
     QTimer *servoTimer;
     QTimer *servoInitTimer;
@@ -124,7 +126,6 @@ private:
     int list_num = 0;
     QStandardItemModel* model = new QStandardItemModel();
     QStandardItemModel* model2 = new QStandardItemModel();
-    int CheckDurationMs = 400;
 
     /*for rectify*/
     cv::FileStorage fs_in;//("./config/intrinsics.yml", cv::FileStorage::READ);
@@ -133,7 +134,11 @@ private:
     cv::Mat R,T,R1,P1,R2,P2,Q;
     bool enable_rectify = false;
     bool matrix_rdy = false;
-    int servoDelay = 15000;
+    int servoDelay = 13000;
+public:
+    QTimer *m_pTimer;
+    int CheckDurationMs = 400;
+    int position = 0;
 };
 
 #endif // MAINWINDOW_H

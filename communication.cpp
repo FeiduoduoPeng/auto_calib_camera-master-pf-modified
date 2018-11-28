@@ -22,6 +22,8 @@ extern Ui::MainWindow *my_ui;
 dt_flag_t f;			//需要发送数据的标志
 //dt_Car_Data_t Car;
 Moto_Data_inf_TypeDef Moto_Data_inf;
+
+
 /////////////////////////////////////////////////////////////////////////////////////
 //Data_Exchange函数处理各种数据发送请求，比如想实现每5ms发送一次传感器数据至上位机，即在此函数内实现
 //此函数应由用户每1ms调用一次
@@ -144,6 +146,7 @@ void Motor_DT_Data_Receive_Prepare(u8 data)
 //Data_Receive_Anl函数是协议数据解析函数，函数参数是符合协议格式的一个数据帧，该函数会首先对协议数据进行校验
 //校验通过后对数据进行解析，实现相应功能
 //此函数可以不用用户自行调用，由函数Data_Receive_Prepare自动调用
+bool ReachFlag=false;
 void Motor_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
 {
 	u8 sum = 0;
@@ -164,13 +167,11 @@ void Motor_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
     else if(*(data_buf+2) == 0x15){
         float data[2];
         memcpy(&data, data_buf + 4,8);
-        //if reach target point, stop servo
+        //if reach target point, recover the m_pTimer
         if(data[0] ==1){
-            int data[2];
-            data[0]=1;
-            Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+            ReachFlag =true;
+            std::cout<<"chessboard reach"<<std::endl;
         }
-        //std::cout<<data[0]<<std::endl;
     }
     else if (*(data_buf + 2) == CMD_ADD_GOODS_KEY)
     {

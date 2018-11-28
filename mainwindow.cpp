@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
 
-
+    cout<<"modified"<<endl;
     ui->setupUi(this);
     my_ui=ui;
 
@@ -183,8 +183,7 @@ bool loadCameraParams(string file_name,Mat &cameraMatrix, Mat &distCoeffs)
 cv::Point2d MainWindow::pixel2cam(const cv::Point2d &p, const cv::Mat &K){
     return cv::Point2d(
                 (p.x - K.at<double>(0,2)) / K.at<double>(0,0),
-                (p.y - K.at<double>(1,2)) / K.at<double>(1,1)
-                );
+                (p.y - K.at<double>(1,2)) / K.at<double>(1,1) );
 }
 
 /**
@@ -214,15 +213,10 @@ double MainWindow::plane_fitting(std::string left_img_file, std::string right_im
         //cv::drawChessboardCorners(img_left_remap, cv::Size(10,11), corners_left, true);
         //cv::imshow("left: ", img_left_remap);
         //cv::waitKey(200);
-
-        //for(int i=0; i<corners_left.size(); ++i){
-        //    cout<<"left: "<<corners_left[i].x<<" "<<corners_left[i].y<<endl;
-        //    cout<<"right: "<<corners_right[i].x<<" "<<corners_right[i].y<<endl;
-        //}
     }
     for(int i=0; i<corners_left.size(); ++i){
-        corners_left[i] = pixel2cam(corners_left[i],M1);
-        corners_right[i] = pixel2cam(corners_right[i],M2);
+        corners_left[i] = pixel2cam(corners_left[i], M1);
+        corners_right[i] = pixel2cam(corners_right[i], M2);
     }
 
     cv::Mat myT1 = (cv::Mat_<double>(3,4) <<
@@ -287,6 +281,27 @@ double MainWindow::plane_fitting(std::string left_img_file, std::string right_im
                 pow(coefficients->values[2],2)
             );
     std::cout<<"distance: "<< estimateDist <<std::endl;
+
+    double plane_fit_error = 0;
+    for(int i=0; i<pts_4d.cols; ++i){
+        plane_fit_error += (
+                    coefficients->values[0] * cloud->points[i].x +
+                    coefficients->values[1] * cloud->points[i].y +
+                    coefficients->values[2] * cloud->points[i].z +
+                    coefficients->values[3]
+                    ) /
+                    sqrt(
+                        pow(coefficients->values[0],2) +
+                        pow(coefficients->values[1],2) +
+                        pow(coefficients->values[2],2)
+                    );
+    }
+    plane_fit_error /= pts_4d.cols;
+    plane_fit_error = abs(plane_fit_error );
+    char num[64];
+    sprintf(num, "%f", plane_fit_error);
+    QMessageBox::about(this,tr("Fit-Plane Error"), string(num).c_str());
+    //std::cout<<"Plane-fitting Average Error: "<< plane_fit_error <<std::endl;
 
     return 0;
 }
@@ -776,17 +791,17 @@ void MainWindow::servoMoveForward(void){
     int data[2];
     data[0]=0;
     Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
-    servoTimer->start(servoDelay);
+    //servoTimer->start(servoDelay);
 }
 void MainWindow::servoMoveBackward(void){
     m_pTimer->stop();
     int data[2];
     data[0]=2;
     Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
-    servoTimer->start(servoDelay);
+    //servoTimer->start(servoDelay);
 }
 void MainWindow::servoStop(void){
-    servoTimer->stop();
+    //servoTimer->stop();
     int data[2];
     data[0]=1;
     Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
@@ -802,7 +817,6 @@ void MainWindow::servoInitStop(void){
 void MainWindow::handleTimeout()
 {
     static float x,y;
-    static int position = 0;
 
     if(m_pTimer->isActive()){
         if(run_step == 0)
@@ -857,7 +871,6 @@ void MainWindow::handleTimeout()
             if(abs(ui->lcdNumber_imu_x->value() - x)<2.0 && abs(ui->lcdnumber_imu_y->value() - y)<2.0)
             {
                 run_step = 2;
-                std::cout<<"reach"<<std::endl;
             }
         }
         else if(run_step == 2)
@@ -933,7 +946,11 @@ void MainWindow::binoTimerHandler(){
     ui->Bino_right_show->setPixmap(QPixmap::fromImage(Mat2QImage(right_resized)) );
     ui->Bino_left_show->adjustSize();
     ui->Bino_right_show->adjustSize();
-
+    if(ReachFlag){
+        ReachFlag = false;
+        if(position == 1 || position ==2)
+            m_pTimer->start(CheckDurationMs);
+    }
 }
 
 void MainWindow::on_pushButton_start_calib_clicked()
@@ -1133,6 +1150,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
     //}
 }
 
+
 void MainWindow::on_pushButton_open_bino_clicked()
 {
     if(ui->pushButton_open_bino->text()=="打开双目"){		//open binocular camera
@@ -1231,7 +1249,6 @@ void MainWindow::on_pushButton_2_clicked()
     int data[2];
     data[0]=1;
     Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
-    //servoMoveForward();
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -1241,14 +1258,20 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_init_clicked()
 {
     int data[2];
-    data[0]=2;
+    data[0]=3;
     Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
-    servoInitTimer->start(2*servoDelay);
 }
 
 void MainWindow::on_pushButton_move_forward_clicked()
 {
     int data[2];
     data[0]=0;
+    Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+}
+
+void MainWindow::on_pushButton_backward_clicked()
+{
+    int data[2];
+    data[0]=2;
     Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
 }

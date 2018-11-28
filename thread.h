@@ -47,8 +47,6 @@ private:
     volatile  int is_change_to_color;
     volatile  int is_change_to_ir;
     QMutex mutex;
-
-
 };
 
 
