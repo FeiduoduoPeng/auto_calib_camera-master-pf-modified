@@ -71,11 +71,11 @@ private slots:
     void on_pushButton_start_calib_clicked();
     void handleTimeout();
     void binoTimerHandler();
+    void checkHandler();
     void servoMoveForward(void);
     void servoMoveBackward(void);
     void servoStop(void);
     void servoInitStop(void);
-    void recoverCheckTimerSlot(void);
     void on_pushButton_read_lists_clicked();
     void on_pushButton_save_lists_clicked();
     void on_Slider_y_valueChanged(int value);
@@ -135,10 +135,10 @@ private:
     bool enable_rectify = false;
     bool matrix_rdy = false;
     int servoDelay = 13000;
-public:
     QTimer *m_pTimer;
     int CheckDurationMs = 400;
     int position = 0;
+    QTimer *checkTimer;
 };
 
 #endif // MAINWINDOW_H

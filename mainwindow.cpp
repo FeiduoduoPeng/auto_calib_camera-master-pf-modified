@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     binoTimer =  new QTimer(this);
     servoTimer = new QTimer(this);
     servoInitTimer = new QTimer(this);
+    checkTimer = new QTimer(this);
     color_image_list_file_name = "color_image_list_file.yaml";
     depth_image_list_file_name = "depth_image_list_file.yaml";
     color_calib_file_name = "color_calib_file.yml";
@@ -67,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(binoTimer, SIGNAL(timeout()), this, SLOT(binoTimerHandler()));
     QObject::connect(servoTimer, SIGNAL(timeout()), this, SLOT(servoStop()));
     QObject::connect(servoInitTimer, SIGNAL(timeout()), this, SLOT(servoInitStop()));
+    QObject::connect(checkTimer, SIGNAL(timeout()), this, SLOT(checkHandler()) );
 
     QStringList labels = QObject::trUtf8("X,Y").simplified().split(",");
     model->setHorizontalHeaderLabels(labels);
@@ -136,6 +138,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //ui->radioButton_select_ir_calib->setDisabled(true);
     //ui->pushButton_save_image->setDisabled(true);
     //ui->radioButton_IR->setDisabled(true);
+
+    checkTimer->start(100);
 }
 
 MainWindow::~MainWindow()
@@ -808,10 +812,11 @@ void MainWindow::servoStop(void){
     m_pTimer->start(CheckDurationMs);
 }
 void MainWindow::servoInitStop(void){
-    servoInitTimer->stop();
-    int data[2];
-    data[0]=1;
-    Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+    //servoInitTimer->stop();
+    //int data[2];
+    //data[0]=1;
+    //Motor_DT_Send_Struct((uint8_t *)data,8,0x15);
+    std::cout<<"servoInitStop"<<std::endl;
 }
 
 void MainWindow::handleTimeout()
@@ -896,6 +901,13 @@ void MainWindow::handleTimeout()
             run_step =0;	//pf
             list_num = 0;	//pf
         }
+    }
+}
+void MainWindow::checkHandler(){
+    if(ReachFlag){
+        ReachFlag = false;
+        if(position == 1 || position ==2)
+            m_pTimer->start(CheckDurationMs);
     }
 }
 
