@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>838</width>
-    <height>793</height>
+    <width>1128</width>
+    <height>819</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -23,6 +23,12 @@
    <layout class="QGridLayout" name="gridLayout_6">
     <item row="0" column="1">
      <widget class="QFrame" name="frame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -33,7 +39,7 @@
        <item row="0" column="1">
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
-          <string>serial control</string>
+          <string>串口设置</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">
@@ -77,7 +83,7 @@
           <item row="2" column="0">
            <widget class="QPushButton" name="pushButton_open_serial">
             <property name="text">
-             <string>open_serial</string>
+             <string>打开串口</string>
             </property>
            </widget>
           </item>
@@ -87,23 +93,23 @@
        <item row="1" column="1">
         <widget class="QGroupBox" name="groupBox_2">
          <property name="title">
-          <string>camera control</string>
+          <string>显示设置</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
           <item row="0" column="0">
            <widget class="QRadioButton" name="radioButton_IR">
             <property name="text">
-             <string>IR_camera</string>
+             <string>红外原图</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
            <widget class="QRadioButton" name="radioButton_color">
             <property name="text">
-             <string>color_camera</string>
+             <string>彩色原图</string>
             </property>
             <property name="checked">
              <bool>false</bool>
@@ -120,14 +126,17 @@
           <item row="2" column="0">
            <widget class="QRadioButton" name="radioButton_IR_calib">
             <property name="text">
-             <string>IR_was_calib</string>
+             <string>单目原图</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="3" column="0">
            <widget class="QRadioButton" name="radioButton_color_calib">
             <property name="text">
-             <string>color_was_calib</string>
+             <string>双目原图</string>
             </property>
            </widget>
           </item>
@@ -137,51 +146,60 @@
        <item row="3" column="1">
         <widget class="QGroupBox" name="groupBox_3">
          <property name="title">
-          <string>image setting</string>
+          <string>校正选项</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="0" column="0">
            <widget class="QRadioButton" name="radioButton_select_color_calib">
-            <property name="text">
-             <string>calib_clolor_image</string>
+            <property name="enabled">
+             <bool>false</bool>
             </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="pushButton_start_calib">
             <property name="text">
-             <string>start_calib</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="pushButton_clean">
-            <property name="text">
-             <string>clear_image</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QRadioButton" name="radioButton_select_ir_calib">
-            <property name="text">
-             <string>calib_IR_image</string>
+             <string>校正彩色图</string>
             </property>
             <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
+          <item row="4" column="0">
+           <widget class="QPushButton" name="pushButton_start_calib">
+            <property name="text">
+             <string>自动开始</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="pushButton_clean">
+            <property name="text">
+             <string>清除所有图片</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="radioButton_select_ir_calib">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>校正红外图</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
           <item row="3" column="0">
            <widget class="QPushButton" name="pushButton_save_image">
             <property name="text">
-             <string>save_image</string>
+             <string>保存当前图片</string>
             </property>
            </widget>
           </item>
           <item row="5" column="0">
            <widget class="QPushButton" name="pushButton_read_image_list">
             <property name="text">
-             <string>calib_image</string>
+             <string>单 校正图像</string>
             </property>
            </widget>
           </item>
@@ -197,7 +215,7 @@
           </size>
          </property>
          <property name="title">
-          <string>camera_Pos_setting</string>
+          <string>相机位姿</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="0" column="0">
@@ -259,7 +277,7 @@
        <item row="5" column="1">
         <widget class="QPushButton" name="pushButton">
          <property name="text">
-          <string>add pos to list</string>
+          <string>添加位姿</string>
          </property>
         </widget>
        </item>
@@ -269,7 +287,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Tab1">
        <property name="minimumSize">
@@ -279,7 +297,7 @@
         </size>
        </property>
        <attribute name="title">
-        <string>video</string>
+        <string>图像</string>
        </attribute>
        <widget class="QLabel" name="label">
         <property name="geometry">
@@ -316,7 +334,7 @@
          </rect>
         </property>
         <property name="title">
-         <string>GroupBox</string>
+         <string>状态</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="2" column="2">
@@ -331,21 +349,21 @@
          <item row="0" column="2">
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>pitch:</string>
+            <string>俯仰角:</string>
            </property>
           </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
-            <string>real_pos:</string>
+            <string>当前位姿:</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>yaw:</string>
+            <string>横滚角:</string>
            </property>
           </widget>
          </item>
@@ -355,7 +373,7 @@
          <item row="2" column="0">
           <widget class="QLabel" name="label_5">
            <property name="text">
-            <string>set_pos:</string>
+            <string>目标位姿:</string>
            </property>
           </widget>
          </item>
@@ -371,18 +389,21 @@
          </rect>
         </property>
         <property name="title">
-         <string>board_grid</string>
+         <string>基本设置:</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_7">
          <item row="0" column="0">
           <widget class="QLabel" name="label_6">
            <property name="text">
-            <string>width:</string>
+            <string>角点宽数:</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
           <widget class="QSpinBox" name="spinBox_grid_width">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="value">
             <number>10</number>
            </property>
@@ -391,12 +412,15 @@
          <item row="1" column="0">
           <widget class="QLabel" name="label_7">
            <property name="text">
-            <string>height</string>
+            <string>焦点高数:</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
           <widget class="QSpinBox" name="spinBox_grid_height">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="value">
             <number>11</number>
            </property>
@@ -405,16 +429,140 @@
          <item row="2" column="1">
           <widget class="QCheckBox" name="checkBox_show_check">
            <property name="text">
-            <string>showcheck</string>
+            <string>实时角点</string>
            </property>
           </widget>
          </item>
         </layout>
        </widget>
       </widget>
+      <widget class="QWidget" name="TabBino">
+       <attribute name="title">
+        <string>双目</string>
+       </attribute>
+       <widget class="QLabel" name="Bino_left_show">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>0</y>
+          <width>441</width>
+          <height>291</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>BinoLeft</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="Bino_right_show">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>0</y>
+          <width>441</width>
+          <height>291</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>BinoRight</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_open_bino">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>640</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>打开双目</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_save_bino">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>600</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>保存双目</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_start_calib_bino">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>600</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>标定</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_clear_bino">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>640</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>清除双目</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="Bino_left_rectified">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>380</y>
+          <width>771</width>
+          <height>211</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Rectified</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_show_rectified">
+        <property name="geometry">
+         <rect>
+          <x>290</x>
+          <y>640</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>矫正效果</string>
+        </property>
+       </widget>
+      </widget>
       <widget class="QWidget" name="Tab2">
        <attribute name="title">
-        <string>PanTiltSetting</string>
+        <string>设置与检查</string>
        </attribute>
        <widget class="QTableView" name="tableView">
         <property name="geometry">
@@ -442,7 +590,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>sava_lists</string>
+         <string>保存列表</string>
         </property>
        </widget>
        <widget class="QPushButton" name="pushButton_read_lists">
@@ -455,7 +603,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>read_lists</string>
+         <string>读取列表</string>
         </property>
        </widget>
        <widget class="QRadioButton" name="radioButton_list1">
@@ -468,7 +616,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>list1</string>
+         <string>列表1</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -484,7 +632,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>list2</string>
+         <string>列表2</string>
         </property>
        </widget>
        <widget class="QRadioButton" name="radioButton_list3">
@@ -497,10 +645,13 @@
          </rect>
         </property>
         <property name="text">
-         <string>list3</string>
+         <string>列表3</string>
         </property>
        </widget>
        <widget class="QTableView" name="tableView_2">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>300</x>
@@ -520,6 +671,9 @@
         </attribute>
        </widget>
        <widget class="QPushButton" name="pushButton_clear_record">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>450</x>
@@ -529,10 +683,13 @@
          </rect>
         </property>
         <property name="text">
-         <string>clear record</string>
+         <string>清除</string>
         </property>
        </widget>
        <widget class="QPushButton" name="pushButton_chk_crn_distr">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>450</x>
@@ -542,7 +699,59 @@
          </rect>
         </property>
         <property name="text">
-         <string>chk crn distr</string>
+         <string>角点分布</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="geometry">
+         <rect>
+          <x>530</x>
+          <y>510</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>停止移动</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_init">
+        <property name="geometry">
+         <rect>
+          <x>530</x>
+          <y>470</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>初始位置</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_move_forward">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>510</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>标定板前进</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_backward">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>470</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>标定板后退</string>
         </property>
        </widget>
       </widget>
@@ -555,7 +764,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>838</width>
+     <width>1128</width>
      <height>28</height>
     </rect>
    </property>

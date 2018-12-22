@@ -12,10 +12,10 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_MULTIMEDIA_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -isystem /usr/local/include -I../../Document/Linux/OpenNI-Linux-x64-2.3/Include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtSerialPort -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+CXXFLAGS      = -m64 -pipe -std=c++11 -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+INCPATH       = -I. -Iinclude -isystem /usr/local/include -isystem /usr/local/include/opencv -isystem /usr/local/include/opencv2 -isystem /usr/include/pcl-1.7 -isystem /usr/include -isystem /usr/include/eigen3 -Iinclude/openni2 -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtMultimedia -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtSerialPort -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -33,10 +33,10 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = calib_camera1.0.0
-DISTDIR = /home/leisure/Desktop/auto_calib_camera-master-pf-modified/.tmp/calib_camera1.0.0
+DISTDIR = /home/leisure/auto_calib_camera-master-pf-modified12-11/.tmp/calib_camera1.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_ocl.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -L/home/leisure/Document/Linux/OpenNI-Linux-x64-2.3/Redist -lOpenNI2 -lusb-1.0 -lGLU -lglut -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/usr/local/lib -L/usr/lib -L/usr/lib/x86_64-linux-gun -Lmylib -Linclude/openni2_redist/x64 -lastra_wrapper -lCEDRIVER_CAM_MONOCULAR -lCEDRIVER_CONFIG_MONOCULAR -lpcl_io -lpcl_common -lpcl_segmentation -lOpenNI2 -lusb-1.0 -lGLU -lglut -lmysqlcppconn /usr/lib/x86_64-linux-gnu/libboost_system.so /usr/lib/x86_64-linux-gnu/libboost_thread.so /usr/lib/x86_64-linux-gnu/libboost_chrono.so /usr/lib/x86_64-linux-gnu/libboost_date_time.so /usr/lib/x86_64-linux-gnu/libboost_atomic.so /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so /usr/local/lib/libopencv_imgcodecs.so -lQt5Multimedia -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Network -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -51,12 +51,30 @@ OBJECTS_DIR   = ./
 SOURCES       = main.cpp \
 		mainwindow.cpp \
 		communication.cpp \
-		thread.cpp moc_mainwindow.cpp \
+		thread.cpp \
+		src/fisheye_calibrate.cpp \
+		src/devices_id.cpp \
+		src/cedriver_usb.cpp \
+		src/cedriver_cam.cpp \
+		src/cedriver_config.cpp \
+		src/list_devices.cpp \
+		src/celib_img_process.cpp \
+		src/myWriteMySQL.cpp \
+		src/cetool_cali_stereo_capture_img.cpp moc_mainwindow.cpp \
 		moc_thread.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		communication.o \
 		thread.o \
+		fisheye_calibrate.o \
+		devices_id.o \
+		cedriver_usb.o \
+		cedriver_cam.o \
+		cedriver_config.o \
+		list_devices.o \
+		celib_img_process.o \
+		myWriteMySQL.o \
+		cetool_cali_stereo_capture_img.o \
 		moc_mainwindow.o \
 		moc_thread.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
@@ -136,6 +154,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/link_pkgconfig.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++11.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf \
@@ -149,11 +168,33 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		calib_camera.pro mainwindow.h \
-		commiunication.h \
-		thread.h main.cpp \
+		communication.h \
+		thread.h \
+		global.h \
+		include/fisheye_calibrate.h \
+		include/cedriver_cam.h \
+		include/cedriver_imu.h \
+		include/cedriver_config.h \
+		include/celib_img_process.h \
+		include/cedriver_usb.h \
+		include/cooleye_monocular/list_devices.h \
+		include/mycetool_calib_stereo_capture_img.h \
+		include/cedriver_global_config.h \
+		include/devices_id.h \
+		include/myWriteMySQL.h \
+		include/threadsafe_queue.h main.cpp \
 		mainwindow.cpp \
 		communication.cpp \
-		thread.cpp
+		thread.cpp \
+		src/fisheye_calibrate.cpp \
+		src/devices_id.cpp \
+		src/cedriver_usb.cpp \
+		src/cedriver_cam.cpp \
+		src/cedriver_config.cpp \
+		src/list_devices.cpp \
+		src/celib_img_process.cpp \
+		src/myWriteMySQL.cpp \
+		src/cetool_cali_stereo_capture_img.cpp
 QMAKE_TARGET  = calib_camera
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = calib_camera
@@ -261,6 +302,7 @@ Makefile: calib_camera.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qm
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/link_pkgconfig.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++11.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf \
@@ -274,9 +316,11 @@ Makefile: calib_camera.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qm
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		calib_camera.pro \
+		/usr/lib/x86_64-linux-gnu/libQt5Multimedia.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Widgets.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Gui.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5SerialPort.prl \
+		/usr/lib/x86_64-linux-gnu/libQt5Network.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Core.prl
 	$(QMAKE) -spec linux-g++-64 CONFIG+=debug -o Makefile calib_camera.pro
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf:
@@ -356,6 +400,7 @@ Makefile: calib_camera.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qm
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resolve_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_post.prf:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/link_pkgconfig.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++11.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf:
@@ -369,9 +414,11 @@ Makefile: calib_camera.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qm
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf:
 calib_camera.pro:
+/usr/lib/x86_64-linux-gnu/libQt5Multimedia.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Widgets.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Gui.prl:
 /usr/lib/x86_64-linux-gnu/libQt5SerialPort.prl:
+/usr/lib/x86_64-linux-gnu/libQt5Network.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -spec linux-g++-64 CONFIG+=debug -o Makefile calib_camera.pro
@@ -387,8 +434,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h commiunication.h thread.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp communication.cpp thread.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h communication.h thread.h global.h include/fisheye_calibrate.h include/cedriver_cam.h include/cedriver_imu.h include/cedriver_config.h include/celib_img_process.h include/cedriver_usb.h include/cooleye_monocular/list_devices.h include/mycetool_calib_stereo_capture_img.h include/cedriver_global_config.h include/devices_id.h include/myWriteMySQL.h include/threadsafe_queue.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp communication.cpp thread.cpp src/fisheye_calibrate.cpp src/devices_id.cpp src/cedriver_usb.cpp src/cedriver_cam.cpp src/cedriver_config.cpp src/list_devices.cpp src/celib_img_process.cpp src/myWriteMySQL.cpp src/cetool_cali_stereo_capture_img.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -416,39 +463,54 @@ compiler_moc_header_make_all: moc_mainwindow.cpp moc_thread.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp moc_thread.cpp
 moc_mainwindow.cpp: thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		include/openni2/OpenNI.h \
+		include/openni2/OniPlatform.h \
+		include/openni2/Win32/OniPlatformWin32.h \
+		include/openni2/Android-Arm/OniPlatformAndroid-Arm.h \
+		include/openni2/Linux-x86/OniPlatformLinux-x86.h \
+		include/openni2/Linux-Arm/OniPlatformLinux-Arm.h \
+		include/openni2/MacOSX/OniPlatformMacOSX.h \
+		include/openni2/OniProperties.h \
+		include/openni2/OniEnums.h \
+		include/openni2/OniCAPI.h \
+		include/openni2/OniCTypes.h \
+		include/openni2/OniCEnums.h \
+		include/openni2/OniCProperties.h \
+		include/openni2/OniVersion.h \
+		include/cedriver_cam.h \
+		include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h \
+		include/fisheye_calibrate.h \
+		include/mycetool_calib_stereo_capture_img.h \
 		mainwindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/Desktop/auto_calib_camera-master-pf-modified -I/usr/local/include -I/home/leisure/Document/Linux/OpenNI-Linux-x64-2.3/Include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/auto_calib_camera-master-pf-modified12-11 -I/home/leisure/auto_calib_camera-master-pf-modified12-11/include -I/usr/local/include -I/usr/local/include/opencv -I/usr/local/include/opencv2 -I/usr/include/pcl-1.7 -I/usr/include -I/usr/include/eigen3 -I/home/leisure/auto_calib_camera-master-pf-modified12-11/include/openni2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
 
-moc_thread.cpp: ../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+moc_thread.cpp: include/openni2/OpenNI.h \
+		include/openni2/OniPlatform.h \
+		include/openni2/Win32/OniPlatformWin32.h \
+		include/openni2/Android-Arm/OniPlatformAndroid-Arm.h \
+		include/openni2/Linux-x86/OniPlatformLinux-x86.h \
+		include/openni2/Linux-Arm/OniPlatformLinux-Arm.h \
+		include/openni2/MacOSX/OniPlatformMacOSX.h \
+		include/openni2/OniProperties.h \
+		include/openni2/OniEnums.h \
+		include/openni2/OniCAPI.h \
+		include/openni2/OniCTypes.h \
+		include/openni2/OniCEnums.h \
+		include/openni2/OniCProperties.h \
+		include/openni2/OniVersion.h \
+		include/cedriver_cam.h \
+		include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h \
+		include/fisheye_calibrate.h \
 		thread.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/Desktop/auto_calib_camera-master-pf-modified -I/usr/local/include -I/home/leisure/Document/Linux/OpenNI-Linux-x64-2.3/Include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include thread.h -o moc_thread.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/auto_calib_camera-master-pf-modified12-11 -I/home/leisure/auto_calib_camera-master-pf-modified12-11/include -I/usr/local/include -I/usr/local/include/opencv -I/usr/local/include/opencv2 -I/usr/include/pcl-1.7 -I/usr/include -I/usr/include/eigen3 -I/home/leisure/auto_calib_camera-master-pf-modified12-11/include/openni2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include thread.h -o moc_thread.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -470,79 +532,175 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 
 main.o: main.cpp mainwindow.h \
 		thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h
+		include/openni2/OpenNI.h \
+		include/openni2/OniPlatform.h \
+		include/openni2/Win32/OniPlatformWin32.h \
+		include/openni2/Android-Arm/OniPlatformAndroid-Arm.h \
+		include/openni2/Linux-x86/OniPlatformLinux-x86.h \
+		include/openni2/Linux-Arm/OniPlatformLinux-Arm.h \
+		include/openni2/MacOSX/OniPlatformMacOSX.h \
+		include/openni2/OniProperties.h \
+		include/openni2/OniEnums.h \
+		include/openni2/OniCAPI.h \
+		include/openni2/OniCTypes.h \
+		include/openni2/OniCEnums.h \
+		include/openni2/OniCProperties.h \
+		include/openni2/OniVersion.h \
+		include/cedriver_cam.h \
+		include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h \
+		include/fisheye_calibrate.h \
+		include/mycetool_calib_stereo_capture_img.h \
+		communication.h \
+		ui_mainwindow.h \
+		include/devices_id.h \
+		include/astra_camera/astra_exception.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainwindow.o: mainwindow.cpp mainwindow.h \
 		thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		include/openni2/OpenNI.h \
+		include/openni2/OniPlatform.h \
+		include/openni2/Win32/OniPlatformWin32.h \
+		include/openni2/Android-Arm/OniPlatformAndroid-Arm.h \
+		include/openni2/Linux-x86/OniPlatformLinux-x86.h \
+		include/openni2/Linux-Arm/OniPlatformLinux-Arm.h \
+		include/openni2/MacOSX/OniPlatformMacOSX.h \
+		include/openni2/OniProperties.h \
+		include/openni2/OniEnums.h \
+		include/openni2/OniCAPI.h \
+		include/openni2/OniCTypes.h \
+		include/openni2/OniCEnums.h \
+		include/openni2/OniCProperties.h \
+		include/openni2/OniVersion.h \
+		include/cedriver_cam.h \
+		include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h \
+		include/fisheye_calibrate.h \
+		include/mycetool_calib_stereo_capture_img.h \
 		ui_mainwindow.h \
-		commiunication.h
+		communication.h \
+		include/devices_id.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
-communication.o: communication.cpp commiunication.h \
+communication.o: communication.cpp communication.h \
 		mainwindow.h \
 		thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
+		include/openni2/OpenNI.h \
+		include/openni2/OniPlatform.h \
+		include/openni2/Win32/OniPlatformWin32.h \
+		include/openni2/Android-Arm/OniPlatformAndroid-Arm.h \
+		include/openni2/Linux-x86/OniPlatformLinux-x86.h \
+		include/openni2/Linux-Arm/OniPlatformLinux-Arm.h \
+		include/openni2/MacOSX/OniPlatformMacOSX.h \
+		include/openni2/OniProperties.h \
+		include/openni2/OniEnums.h \
+		include/openni2/OniCAPI.h \
+		include/openni2/OniCTypes.h \
+		include/openni2/OniCEnums.h \
+		include/openni2/OniCProperties.h \
+		include/openni2/OniVersion.h \
+		include/cedriver_cam.h \
+		include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h \
+		include/fisheye_calibrate.h \
+		include/mycetool_calib_stereo_capture_img.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o communication.o communication.cpp
 
 thread.o: thread.cpp thread.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OpenNI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniPlatform.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Win32/OniPlatformWin32.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Android-Arm/OniPlatformAndroid-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-x86/OniPlatformLinux-x86.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/Linux-Arm/OniPlatformLinux-Arm.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/MacOSX/OniPlatformMacOSX.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCAPI.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCTypes.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCEnums.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniCProperties.h \
-		../../Document/Linux/OpenNI-Linux-x64-2.3/Include/OniVersion.h \
-		mainwindow.h
+		include/openni2/OpenNI.h \
+		include/openni2/OniPlatform.h \
+		include/openni2/Win32/OniPlatformWin32.h \
+		include/openni2/Android-Arm/OniPlatformAndroid-Arm.h \
+		include/openni2/Linux-x86/OniPlatformLinux-x86.h \
+		include/openni2/Linux-Arm/OniPlatformLinux-Arm.h \
+		include/openni2/MacOSX/OniPlatformMacOSX.h \
+		include/openni2/OniProperties.h \
+		include/openni2/OniEnums.h \
+		include/openni2/OniCAPI.h \
+		include/openni2/OniCTypes.h \
+		include/openni2/OniCEnums.h \
+		include/openni2/OniCProperties.h \
+		include/openni2/OniVersion.h \
+		include/cedriver_cam.h \
+		include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h \
+		include/fisheye_calibrate.h \
+		mainwindow.h \
+		include/mycetool_calib_stereo_capture_img.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o thread.o thread.cpp
+
+fisheye_calibrate.o: src/fisheye_calibrate.cpp include/fisheye_calibrate.h \
+		include/myWriteMySQL.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o fisheye_calibrate.o src/fisheye_calibrate.cpp
+
+devices_id.o: src/devices_id.cpp include/devices_id.h \
+		include/astra_camera/astra_device_manager.h \
+		include/astra_camera/astra_device_info.h \
+		include/astra_camera/astra_exception.h \
+		include/cooleye_monocular/list_devices.h \
+		include/cedriver_cam.h \
+		include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o devices_id.o src/devices_id.cpp
+
+cedriver_usb.o: src/cedriver_usb.cpp include/cedriver_usb.h \
+		include/cedriver_global_config.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cedriver_usb.o src/cedriver_usb.cpp
+
+cedriver_cam.o: src/cedriver_cam.cpp include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_cam.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cedriver_cam.o src/cedriver_cam.cpp
+
+cedriver_config.o: src/cedriver_config.cpp include/cedriver_config.h \
+		include/cedriver_global_config.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cedriver_config.o src/cedriver_config.cpp
+
+list_devices.o: src/list_devices.cpp include/cooleye_monocular/list_devices.h \
+		include/cedriver_cam.h \
+		include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o list_devices.o src/list_devices.cpp
+
+celib_img_process.o: src/celib_img_process.cpp include/celib_img_process.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o celib_img_process.o src/celib_img_process.cpp
+
+myWriteMySQL.o: src/myWriteMySQL.cpp include/myWriteMySQL.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myWriteMySQL.o src/myWriteMySQL.cpp
+
+cetool_cali_stereo_capture_img.o: src/cetool_cali_stereo_capture_img.cpp include/cedriver_usb.h \
+		include/cedriver_global_config.h \
+		include/cedriver_cam.h \
+		include/cedriver_config.h \
+		include/threadsafe_queue.h \
+		global.h \
+		include/cedriver_imu.h \
+		include/celib_img_process.h \
+		include/mycetool_calib_stereo_capture_img.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cetool_cali_stereo_capture_img.o src/cetool_cali_stereo_capture_img.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
