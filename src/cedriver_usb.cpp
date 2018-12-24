@@ -12,7 +12,7 @@ static int ce_usb_lookup_cam_handle(libusb_device *dev)
     libusb_get_device_descriptor(dev, &desc);
     if ( (VID_CE_D1 == desc.idVendor) && (PID_CE_D1 == desc.idProduct) )
         return SUCCESS;
-    return ERROR;
+    return CE_ERROR;
 }
 
 libusb_device_handle * ce_usb_gethandle(int index)

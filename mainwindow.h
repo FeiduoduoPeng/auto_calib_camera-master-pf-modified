@@ -14,6 +14,7 @@
 #include "cedriver_cam.h"
 #include "cedriver_config.h"
 #include "mycetool_calib_stereo_capture_img.h"
+#include "rechargecam.h"
 
 #include <pcl/point_cloud.h>
 #include <pcl/ModelCoefficients.h>
@@ -59,11 +60,15 @@ public:
     ~MainWindow();
 
 public slots:
-
     void accept(QString msg);
     void monoaccept();
+    void rcgaccept();
     void fisheyecalibStatus(int);
     void binoCalibStatus(int exitCode, QProcess::ExitStatus exitStatus);
+    void rgbdCalibStatus(int, QProcess::ExitStatus);
+    void rcgCalibStatus(int, QProcess::ExitStatus);
+
+
 private slots:
 
     void on_pushButton_open_camera_clicked();
@@ -107,6 +112,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Thread thread;
+    RechargeCam rechargecam;
     monoThread monotrd;
     fisheyeCalib fisheyecalib;
     QTimer *binoTimer;

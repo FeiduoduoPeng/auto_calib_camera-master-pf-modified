@@ -32,7 +32,7 @@ int MonocularDevices::initialize(void)
     if(r_num < 1)
     {
         std::cerr << "celog: No cameras found! r = " << r_num << std::endl;
-        return ERROR;
+        return CE_ERROR;
     }
     else
     {

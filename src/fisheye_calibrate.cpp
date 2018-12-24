@@ -40,8 +40,8 @@ int FisheyeCalibrate(std::string rootdirPath, std::string xxtrinsics){
     cout<<"found images number: "<<filenames.size()<<endl;
 
     vector<cv::Point3d> obj;
-    for(int i=0; i<HEIGHT; ++i){
-        for(int j=0; j<WIDTH; ++j){
+    for(int i=0; i<CORNER_HEIGHT; ++i){
+        for(int j=0; j<CORNER_WIDTH; ++j){
             obj.push_back( cv::Point3d(float(j*squareSize),
                                         float(i*squareSize), 0 ));
         }
@@ -63,10 +63,9 @@ int FisheyeCalibrate(std::string rootdirPath, std::string xxtrinsics){
             std::cerr<<"MONO-CALIB open error"<<std::endl;
             return -1;
         }
-        int found = findChessboardCorners(gray_pic, Size(WIDTH,HEIGHT), corners);
+        int found = findChessboardCorners(gray_pic, Size(CORNER_WIDTH, CORNER_HEIGHT), corners);
         if(found){
-            //cv::cornerSubPix(gray_pic, corners, Size(11,11), Size(-1,-1), TermCriteria(CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 30, 0.1) );
-//            cv::drawChessboardCorners(gray_pic, Size(WIDTH,HEIGHT), corners, found);
+//            cv::drawChessboardCorners(gray_pic, Size(CORNER_WIDTH, CORNER_HEIGHT), corners, found);
 //            cv::imshow("corners",gray_pic);
 //            QThread::msleep(100);
 //            cv::destroyAllWindows();

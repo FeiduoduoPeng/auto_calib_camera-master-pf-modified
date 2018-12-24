@@ -10,8 +10,8 @@
 #include <fstream>
 #include <dirent.h>
 
-#define WIDTH 10
-#define HEIGHT 11
+#define CORNER_WIDTH 10
+#define CORNER_HEIGHT 11
 #define squareSize 40
 
 

@@ -1,5 +1,0 @@
-/home/leisure/auto_calib_camera-master-pf-modified12-11/build/CMakeFiles/edit_cache.dir
-/home/leisure/auto_calib_camera-master-pf-modified12-11/build/CMakeFiles/rebuild_cache.dir
-/home/leisure/auto_calib_camera-master-pf-modified12-11/build/CMakeFiles/CEDRIVER_CONFIG.dir
-/home/leisure/auto_calib_camera-master-pf-modified12-11/build/CMakeFiles/cpp-example-calibration.dir
-/home/leisure/auto_calib_camera-master-pf-modified12-11/build/CMakeFiles/CETOOL_CALI_STEREO_CAL.dir

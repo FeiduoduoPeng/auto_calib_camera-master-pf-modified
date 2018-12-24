@@ -66,7 +66,7 @@ int ce_cali_catch_enter_key_init()
     if(temp)
     {
         printf("Failed to create thread catch enter key \r\n");
-        return ERROR;
+        return CE_ERROR;
     }
     return SUCCESS;
 }

@@ -33,10 +33,10 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = calib_camera1.0.0
-DISTDIR = /home/leisure/auto_calib_camera-master-pf-modified12-11/.tmp/calib_camera1.0.0
+DISTDIR = /home/leisure/auto_calib_camera-master-pf-modified/.tmp/calib_camera1.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/usr/local/lib -L/usr/lib -L/usr/lib/x86_64-linux-gun -Lmylib -Linclude/openni2_redist/x64 -lastra_wrapper -lCEDRIVER_CAM_MONOCULAR -lCEDRIVER_CONFIG_MONOCULAR -lpcl_io -lpcl_common -lpcl_segmentation -lOpenNI2 -lusb-1.0 -lGLU -lglut -lmysqlcppconn /usr/lib/x86_64-linux-gnu/libboost_system.so /usr/lib/x86_64-linux-gnu/libboost_thread.so /usr/lib/x86_64-linux-gnu/libboost_chrono.so /usr/lib/x86_64-linux-gnu/libboost_date_time.so /usr/lib/x86_64-linux-gnu/libboost_atomic.so /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so /usr/local/lib/libopencv_imgcodecs.so -lQt5Multimedia -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Network -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/usr/local/lib -L/usr/lib -L/usr/lib/x86_64-linux-gun -Lmylib -Linclude/openni2_redist/x64 -lastra_wrapper -lCEDRIVER_CAM_MONOCULAR -lCEDRIVER_CONFIG_MONOCULAR -lv4l2wrapper -llog4cpp -lpcl_io -lpcl_common -lpcl_segmentation -lOpenNI2 -lusb-1.0 -lGLU -lglut -lmysqlcppconn /usr/lib/x86_64-linux-gnu/libboost_system.so /usr/lib/x86_64-linux-gnu/libboost_thread.so /usr/lib/x86_64-linux-gnu/libboost_chrono.so /usr/lib/x86_64-linux-gnu/libboost_date_time.so /usr/lib/x86_64-linux-gnu/libboost_atomic.so /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so /usr/local/lib/libopencv_imgcodecs.so -lQt5Multimedia -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Network -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -60,8 +60,10 @@ SOURCES       = main.cpp \
 		src/list_devices.cpp \
 		src/celib_img_process.cpp \
 		src/myWriteMySQL.cpp \
-		src/cetool_cali_stereo_capture_img.cpp moc_mainwindow.cpp \
-		moc_thread.cpp
+		src/cetool_cali_stereo_capture_img.cpp \
+		src/rechargecam.cpp moc_mainwindow.cpp \
+		moc_thread.cpp \
+		moc_rechargecam.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		communication.o \
@@ -75,8 +77,10 @@ OBJECTS       = main.o \
 		celib_img_process.o \
 		myWriteMySQL.o \
 		cetool_cali_stereo_capture_img.o \
+		rechargecam.o \
 		moc_mainwindow.o \
-		moc_thread.o
+		moc_thread.o \
+		moc_rechargecam.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -182,7 +186,14 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		include/cedriver_global_config.h \
 		include/devices_id.h \
 		include/myWriteMySQL.h \
-		include/threadsafe_queue.h main.cpp \
+		include/threadsafe_queue.h \
+		include/V4l2Access.h \
+		include/V4l2Capture.h \
+		include/V4l2Device.h \
+		include/V4l2MmapDevice.h \
+		include/V4l2Output.h \
+		include/V4l2ReadWriteDevice.h \
+		include/rechargecam.h main.cpp \
 		mainwindow.cpp \
 		communication.cpp \
 		thread.cpp \
@@ -194,7 +205,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		src/list_devices.cpp \
 		src/celib_img_process.cpp \
 		src/myWriteMySQL.cpp \
-		src/cetool_cali_stereo_capture_img.cpp
+		src/cetool_cali_stereo_capture_img.cpp \
+		src/rechargecam.cpp
 QMAKE_TARGET  = calib_camera
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = calib_camera
@@ -434,8 +446,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h communication.h thread.h global.h include/fisheye_calibrate.h include/cedriver_cam.h include/cedriver_imu.h include/cedriver_config.h include/celib_img_process.h include/cedriver_usb.h include/cooleye_monocular/list_devices.h include/mycetool_calib_stereo_capture_img.h include/cedriver_global_config.h include/devices_id.h include/myWriteMySQL.h include/threadsafe_queue.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp communication.cpp thread.cpp src/fisheye_calibrate.cpp src/devices_id.cpp src/cedriver_usb.cpp src/cedriver_cam.cpp src/cedriver_config.cpp src/list_devices.cpp src/celib_img_process.cpp src/myWriteMySQL.cpp src/cetool_cali_stereo_capture_img.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h communication.h thread.h global.h include/fisheye_calibrate.h include/cedriver_cam.h include/cedriver_imu.h include/cedriver_config.h include/celib_img_process.h include/cedriver_usb.h include/cooleye_monocular/list_devices.h include/mycetool_calib_stereo_capture_img.h include/cedriver_global_config.h include/devices_id.h include/myWriteMySQL.h include/threadsafe_queue.h include/V4l2Access.h include/V4l2Capture.h include/V4l2Device.h include/V4l2MmapDevice.h include/V4l2Output.h include/V4l2ReadWriteDevice.h include/rechargecam.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp communication.cpp thread.cpp src/fisheye_calibrate.cpp src/devices_id.cpp src/cedriver_usb.cpp src/cedriver_cam.cpp src/cedriver_config.cpp src/list_devices.cpp src/celib_img_process.cpp src/myWriteMySQL.cpp src/cetool_cali_stereo_capture_img.cpp src/rechargecam.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -459,9 +471,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_thread.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_thread.cpp moc_rechargecam.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_thread.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_thread.cpp moc_rechargecam.cpp
 moc_mainwindow.cpp: thread.h \
 		include/openni2/OpenNI.h \
 		include/openni2/OniPlatform.h \
@@ -485,8 +497,16 @@ moc_mainwindow.cpp: thread.h \
 		global.h \
 		include/fisheye_calibrate.h \
 		include/mycetool_calib_stereo_capture_img.h \
+		include/rechargecam.h \
+		include/logger.h \
+		include/V4l2Access.h \
+		include/V4l2Device.h \
+		include/V4l2Capture.h \
+		include/V4l2MmapDevice.h \
+		include/V4l2Output.h \
+		include/V4l2ReadWriteDevice.h \
 		mainwindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/auto_calib_camera-master-pf-modified12-11 -I/home/leisure/auto_calib_camera-master-pf-modified12-11/include -I/usr/local/include -I/usr/local/include/opencv -I/usr/local/include/opencv2 -I/usr/include/pcl-1.7 -I/usr/include -I/usr/include/eigen3 -I/home/leisure/auto_calib_camera-master-pf-modified12-11/include/openni2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/auto_calib_camera-master-pf-modified -I/home/leisure/auto_calib_camera-master-pf-modified/include -I/usr/local/include -I/usr/local/include/opencv -I/usr/local/include/opencv2 -I/usr/include/pcl-1.7 -I/usr/include -I/usr/include/eigen3 -I/home/leisure/auto_calib_camera-master-pf-modified/include/openni2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
 
 moc_thread.cpp: include/openni2/OpenNI.h \
 		include/openni2/OniPlatform.h \
@@ -510,7 +530,17 @@ moc_thread.cpp: include/openni2/OpenNI.h \
 		global.h \
 		include/fisheye_calibrate.h \
 		thread.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/auto_calib_camera-master-pf-modified12-11 -I/home/leisure/auto_calib_camera-master-pf-modified12-11/include -I/usr/local/include -I/usr/local/include/opencv -I/usr/local/include/opencv2 -I/usr/include/pcl-1.7 -I/usr/include -I/usr/include/eigen3 -I/home/leisure/auto_calib_camera-master-pf-modified12-11/include/openni2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include thread.h -o moc_thread.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/auto_calib_camera-master-pf-modified -I/home/leisure/auto_calib_camera-master-pf-modified/include -I/usr/local/include -I/usr/local/include/opencv -I/usr/local/include/opencv2 -I/usr/include/pcl-1.7 -I/usr/include -I/usr/include/eigen3 -I/home/leisure/auto_calib_camera-master-pf-modified/include/openni2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include thread.h -o moc_thread.cpp
+
+moc_rechargecam.cpp: include/logger.h \
+		include/V4l2Access.h \
+		include/V4l2Device.h \
+		include/V4l2Capture.h \
+		include/V4l2MmapDevice.h \
+		include/V4l2Output.h \
+		include/V4l2ReadWriteDevice.h \
+		include/rechargecam.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/leisure/auto_calib_camera-master-pf-modified -I/home/leisure/auto_calib_camera-master-pf-modified/include -I/usr/local/include -I/usr/local/include/opencv -I/usr/local/include/opencv2 -I/usr/include/pcl-1.7 -I/usr/include -I/usr/include/eigen3 -I/home/leisure/auto_calib_camera-master-pf-modified/include/openni2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/rechargecam.h -o moc_rechargecam.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -554,6 +584,14 @@ main.o: main.cpp mainwindow.h \
 		global.h \
 		include/fisheye_calibrate.h \
 		include/mycetool_calib_stereo_capture_img.h \
+		include/rechargecam.h \
+		include/logger.h \
+		include/V4l2Access.h \
+		include/V4l2Device.h \
+		include/V4l2Capture.h \
+		include/V4l2MmapDevice.h \
+		include/V4l2Output.h \
+		include/V4l2ReadWriteDevice.h \
 		communication.h \
 		ui_mainwindow.h \
 		include/devices_id.h \
@@ -584,6 +622,14 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		global.h \
 		include/fisheye_calibrate.h \
 		include/mycetool_calib_stereo_capture_img.h \
+		include/rechargecam.h \
+		include/logger.h \
+		include/V4l2Access.h \
+		include/V4l2Device.h \
+		include/V4l2Capture.h \
+		include/V4l2MmapDevice.h \
+		include/V4l2Output.h \
+		include/V4l2ReadWriteDevice.h \
 		ui_mainwindow.h \
 		communication.h \
 		include/devices_id.h
@@ -614,6 +660,14 @@ communication.o: communication.cpp communication.h \
 		global.h \
 		include/fisheye_calibrate.h \
 		include/mycetool_calib_stereo_capture_img.h \
+		include/rechargecam.h \
+		include/logger.h \
+		include/V4l2Access.h \
+		include/V4l2Device.h \
+		include/V4l2Capture.h \
+		include/V4l2MmapDevice.h \
+		include/V4l2Output.h \
+		include/V4l2ReadWriteDevice.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o communication.o communication.cpp
 
@@ -640,7 +694,15 @@ thread.o: thread.cpp thread.h \
 		global.h \
 		include/fisheye_calibrate.h \
 		mainwindow.h \
-		include/mycetool_calib_stereo_capture_img.h
+		include/mycetool_calib_stereo_capture_img.h \
+		include/rechargecam.h \
+		include/logger.h \
+		include/V4l2Access.h \
+		include/V4l2Device.h \
+		include/V4l2Capture.h \
+		include/V4l2MmapDevice.h \
+		include/V4l2Output.h \
+		include/V4l2ReadWriteDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o thread.o thread.cpp
 
 fisheye_calibrate.o: src/fisheye_calibrate.cpp include/fisheye_calibrate.h \
@@ -702,11 +764,24 @@ cetool_cali_stereo_capture_img.o: src/cetool_cali_stereo_capture_img.cpp include
 		include/mycetool_calib_stereo_capture_img.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cetool_cali_stereo_capture_img.o src/cetool_cali_stereo_capture_img.cpp
 
+rechargecam.o: src/rechargecam.cpp include/rechargecam.h \
+		include/logger.h \
+		include/V4l2Access.h \
+		include/V4l2Device.h \
+		include/V4l2Capture.h \
+		include/V4l2MmapDevice.h \
+		include/V4l2Output.h \
+		include/V4l2ReadWriteDevice.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rechargecam.o src/rechargecam.cpp
+
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
 
 moc_thread.o: moc_thread.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_thread.o moc_thread.cpp
+
+moc_rechargecam.o: moc_rechargecam.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_rechargecam.o moc_rechargecam.cpp
 
 ####### Install
 

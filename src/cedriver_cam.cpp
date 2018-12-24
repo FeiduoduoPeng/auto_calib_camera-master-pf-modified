@@ -184,7 +184,7 @@ static int ce_cam_set_af_mode(int camlr)
     else
     {
         LOG("celog: Wrong cam number!\r\n");
-        return ERROR;
+        return CE_ERROR;
     }
 
     return SUCCESS;
@@ -199,7 +199,7 @@ static int ce_cam_sync_rst(int camlr)
     else
     {
         LOG("celog: Wrong cam number!\r\n");
-        return ERROR;
+        return CE_ERROR;
     }
 
     while( (!ce_cam_rst_flag_left)||(!ce_cam_rst_flag_right));
@@ -228,7 +228,7 @@ static int ce_cam_sync_rst_bulk(int camlr)
     else
     {
         LOG("celog: Wrong cam number!\r\n");
-        return ERROR;
+        return CE_ERROR;
     }
     
     while( (!ce_cam_rst_flag_left)||(!ce_cam_rst_flag_right));
@@ -500,7 +500,7 @@ int ce_cam_capture_init()
     if(r<1)
     {
         LOG("celog: No cameras found! r = %d\r\n",r);
-        return ERROR;
+        return CE_ERROR;
     }
     else
     {
@@ -535,19 +535,19 @@ int ce_cam_capture_init()
     if(ce_config_get_cf_cam_mode() & CAMD1_LEFT_ENABLE)
     {
         if(pcaml_handle==NULL)
-            ret_val= ERROR;
+            ret_val= CE_ERROR;
     }
 
     if(ce_config_get_cf_cam_mode() & CAMD1_RIGHT_ENABLE)
     {
         if(pcamr_handle==NULL)
-            ret_val= ERROR;
+            ret_val= CE_ERROR;
     }
 
-    if(ERROR == ret_val)
+    if(CE_ERROR == ret_val)
     {
         LOG("celog: lost a cam left or right \r\n");
-        return ERROR;
+        return CE_ERROR;
     }
     else
     {
@@ -566,7 +566,7 @@ int ce_cam_capture_init()
             if(temp)
             {
                 LOG("celog: create thread failed !\r\n");
-                return ERROR;
+                return CE_ERROR;
             }
         }
 
@@ -577,7 +577,7 @@ int ce_cam_capture_init()
             if(temp)
             {
                 LOG("celog: create thread failed !\r\n");
-                return ERROR;
+                return CE_ERROR;
             }
         }
         usleep(1000);
@@ -800,7 +800,7 @@ int ce_cam_preprocess_init()
     if(temp)
     {
         LOG("celog: Failed to create thread show image \r\n");
-        return ERROR;
+        return CE_ERROR;
     }
     return SUCCESS;
 }
@@ -1262,7 +1262,7 @@ int ce_cams1_preprocess_init()
     if(temp)
     {
         LOG("celog: Failed to create thread show image \r\n");
-        return ERROR;
+        return CE_ERROR;
 
     }
     return SUCCESS;
@@ -1294,7 +1294,7 @@ int ce_cams1_capture_init()
     if(r<1)
     {
         LOG("celog: No cameras found! r = %d\r\n",r);
-        return ERROR;
+        return CE_ERROR;
     }
     else
     {
@@ -1329,10 +1329,10 @@ int ce_cams1_capture_init()
         }
     }
 
-    if(ERROR == ret_val)
+    if(CE_ERROR == ret_val)
     {
         LOG("celog: lost a cam s1 nx \r\n");
-        return ERROR;
+        return CE_ERROR;
     }
     else
     {
@@ -1350,7 +1350,7 @@ int ce_cams1_capture_init()
             if(temp)
             {
                 LOG("celog: create thread failed !\r\n");
-                return ERROR;
+                return CE_ERROR;
             }
         }
 
@@ -1362,7 +1362,7 @@ int ce_cams1_capture_init()
             if(temp)
             {
                 LOG("celog: create thread failed !\r\n");
-                return ERROR;
+                return CE_ERROR;
             }
         }
 
@@ -1374,7 +1374,7 @@ int ce_cams1_capture_init()
             if(temp)
             {
                 LOG("celog: create thread failed !\r\n");
-                return ERROR;
+                return CE_ERROR;
             }
         }
 

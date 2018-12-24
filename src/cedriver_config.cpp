@@ -47,7 +47,7 @@ static int ce_config_get_cf_int_para(std::vector<std::string> *tconfiglist, std:
 
     if(scf == "ERROR")
     {
-        return ERROR;
+        return CE_ERROR;
     }
     else
     {
@@ -73,7 +73,7 @@ static float ce_config_get_cf_float_para(std::vector<std::string> *tconfiglist, 
 
     if(scf == "ERROR")
     {
-        return ERROR;
+        return CE_ERROR;
     }
     else
     {

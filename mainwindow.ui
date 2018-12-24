@@ -116,7 +116,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="6" column="0">
            <widget class="QPushButton" name="pushButton_open_camera">
             <property name="text">
              <string>open_camera</string>
@@ -140,6 +140,23 @@
             </property>
            </widget>
           </item>
+          <item row="4" column="0">
+           <widget class="QRadioButton" name="radioButtonRechargeCamera">
+            <property name="text">
+             <string>自充原图</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLineEdit" name="lineEdit_RcgID">
+            <property name="inputMethodHints">
+             <set>Qt::ImhNone</set>
+            </property>
+            <property name="placeholderText">
+             <string>自充相机ID</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -149,27 +166,14 @@
           <string>校正选项</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
-           <widget class="QRadioButton" name="radioButton_select_color_calib">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>校正彩色图</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
+          <item row="2" column="0">
            <widget class="QPushButton" name="pushButton_start_calib">
             <property name="text">
              <string>自动开始</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="0" column="0">
            <widget class="QPushButton" name="pushButton_clean">
             <property name="text">
              <string>清除所有图片</string>
@@ -177,26 +181,13 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QRadioButton" name="radioButton_select_ir_calib">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>校正红外图</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
            <widget class="QPushButton" name="pushButton_save_image">
             <property name="text">
              <string>保存当前图片</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="3" column="0">
            <widget class="QPushButton" name="pushButton_read_image_list">
             <property name="text">
              <string>单 校正图像</string>

@@ -38,8 +38,6 @@ MainWindow::MainWindow(QWidget *parent) :
     checkTimer = new QTimer(this);
     color_image_list_file_name = "color_image_list_file.yaml";
     depth_image_list_file_name = "depth_image_list_file.yaml";
-//    color_calib_file_name = "./CalibrationParam/rgbd_color_xxtrinsics.yml";
-//    depth_calib_file_name = "./CalibrationParam/rgbd_ir_xxtrinsics.yml";
 
     /*initialize the frames*/
     QDir dir_l("./imgL");
@@ -50,12 +48,10 @@ MainWindow::MainWindow(QWidget *parent) :
     frames = fileinfo.count() ;
 
     //查找可用的串口
-    foreach(const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
-    {
+    foreach(const QSerialPortInfo &info, QSerialPortInfo::availablePorts()){
         QSerialPort serial;
         serial.setPort(info);
-        if(serial.open(QIODevice::ReadWrite))
-        {
+        if(serial.open(QIODevice::ReadWrite)){
             ui->PortBox->addItem(serial.portName());
             serial.close();
         }
@@ -64,9 +60,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_open_serial->setText(tr("打开串口"));
     ui->pushButton_open_camera->setText(tr("open_camera"));
 
-    QObject::connect(&thread, SIGNAL(send(QString)), this, SLOT(accept(QString)),Qt::BlockingQueuedConnection);
+    QObject::connect(&thread, SIGNAL(send(QString)), this, SLOT(accept(QString)), Qt::BlockingQueuedConnection);
     QObject::connect(&fisheyecalib, SIGNAL(send(int)), this, SLOT(fisheyecalibStatus(int)) );
-    QObject::connect(&monotrd, SIGNAL(send()), this, SLOT(monoaccept()),Qt::BlockingQueuedConnection);
+    QObject::connect(&monotrd, SIGNAL(send()), this, SLOT(monoaccept()), Qt::BlockingQueuedConnection);
+    QObject::connect(&rechargecam, SIGNAL(send()), this, SLOT(rcgaccept()), Qt::BlockingQueuedConnection);
     QObject::connect(binoTimer, SIGNAL(timeout()), this, SLOT(binoTimerHandler()));
     QObject::connect(servoTimer, SIGNAL(timeout()), this, SLOT(servoStop()));
     QObject::connect(servoInitTimer, SIGNAL(timeout()), this, SLOT(servoInitStop()));
@@ -100,31 +97,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableView_2->show();
     myWriteXML(100);
 
+    ui->lineEdit_RcgID->setValidator( new QIntValidator(0, 9999, this) );
+
     ui->pushButton_open_bino->setVisible(false);
-//    ui->pushButton_save_bino->setVisible(false);
+    ui->pushButton_save_bino->setVisible(false);
     ui->pushButton_start_calib_bino->setVisible(false);
-    ui->radioButton_select_color_calib->setVisible(false);
-    ui->radioButton_select_ir_calib->setVisible(false);
     ui->pushButton_clean->setVisible(false);
     ui->pushButton_save_image->setVisible(false);
-
-    /************************************************************/
-    /***********disable some widget for easy use!****************/
-    /***********disable some widget for easy use!****************/
-    /***********disable some widget for easy use!****************/
-    /************************************************************/
-    //ui->Slider_x->setDisabled(true);
-    //ui->Slider_y->setDisabled(true);
-    //ui->pushButton->setDisabled(true);
-    //ui->pushButton_save_lists->setDisabled(true);
-    //ui->pushButton_read_lists->setDisabled(true);
-    //ui->spinBox_grid_height->setDisabled(true);
-    //ui->spinBox_grid_width->setDisabled(true);
-    //ui->radioButton_color_calib->setDisabled(true);
-    //ui->radioButton_IR_calib->setDisabled(true);
-    //ui->radioButton_select_ir_calib->setDisabled(true);
-    //ui->pushButton_save_image->setDisabled(true);
-    //ui->radioButton_IR->setDisabled(true);
 
     checkTimer->start(100);
 }
@@ -143,8 +122,7 @@ void MainWindow::updateBinoFileNum(){
     frames = fileinfo.count() ;
 }
 
-bool MainWindow::executeCMD(const char *cmd)
-{
+bool MainWindow::executeCMD(const char *cmd){
     FILE *ptr;
     char buf_ps[1024];
     char ps[1024]={0};
@@ -156,23 +134,19 @@ bool MainWindow::executeCMD(const char *cmd)
         ptr = NULL;
         return true;
     }else{
-        printf("popen %s error\n", ps);
         return false;
     }
-
 }
 
 void MainWindow::binoCalibStatus(int exitCode, QProcess::ExitStatus exitStatus){
-//    std::cout<<"***"<<exitCode<<"***"<<std::endl;
-    string camera_id = binofile_tmp_e.substr( binofile_tmp_e.find_last_of("/") );
+    string camera_id = binofile_tmp_e.substr( binofile_tmp_e.find_last_of("/")+1 );
     if(exitCode == 0){
-        FileStorage fs(binofile_tmp_e, FileStorage::READ);//这个名字就是你之前校正得到的yml文件
+        FileStorage fs(binofile_tmp_e, FileStorage::READ);
         cv::Mat T;
         if(fs.isOpened()){
             fs["T"] >> T;
         }
         double X = abs(T.at<double>(0,0));
-//		std::cout<<"结构外餐"<<std::endl<<X<<std::endl;
         if(X>95.0 && X<105.0 ){		//双目的结构参数沿X方向是100mm左右
             QMessageBox::about(this, camera_id.c_str(), string("成功").c_str());
             return;
@@ -184,32 +158,62 @@ void MainWindow::binoCalibStatus(int exitCode, QProcess::ExitStatus exitStatus){
         if(exitCode > 0){
             std::string content;
             content = "删除第"+std::to_string(exitCode)+"张图，并按“单校正图像”重试";
-            QMessageBox::about(this,tr("标定失败"), content.c_str());
-//            std::string cmd;
-//            cmd = "rm ./imgR/*" + std::to_string(exitCode-1) + ".jpg ./imgL/*" + std::to_string(exitCode-1) + ".jpg";
-//            executeCMD(cmd.c_str());
-//            std::cout<<"delete image: "<<exitCode<<std::endl<< fail_cnt <<" times try to re-calibrate"<<std::endl;
-//            sleep(1);
-//            on_pushButton_read_image_list_clicked();
+            QMessageBox::about(this,tr("标定失败"), content.c_str());        }
+    }
+}
+
+void MainWindow::fisheyecalibStatus(int s){
+    std::string camera_id = monofile_tmp.substr( monofile_tmp.find_last_of("/")+1 );
+    if(s == 0){
+        QMessageBox::about(this, camera_id.c_str(), tr("标定成功"));
+    }else if(s == -1){
+        QMessageBox::about(this, camera_id.c_str(), tr("标定失败"));
+    }else{
+        std::string content;
+        content = "删除第"+std::to_string(s)+"张图，并按“单校正图像”重试";
+        std::cout<<"err img: "<<s<<std::endl;
+        QMessageBox::about(this,tr("标定失败"), content.c_str());
+    }
+}
+
+void MainWindow::rgbdCalibStatus(int exitCode, QProcess::ExitStatus exitStatus){
+    std::string camera_id = rgbdfile_tmp_ir.substr( rgbdfile_tmp_ir.find_last_of("/")+1 );
+    if(exitCode == 0){
+        std::cout<<rgbdfile_tmp_ir<<std::endl;
+        cv::FileStorage fs(rgbdfile_tmp_ir, FileStorage::READ);
+        double rms;
+        fs["avg_reprojection_error"] >> rms;
+        if(rms<1.0)
+            QMessageBox::about(this, camera_id.c_str(), QString("标定成功") );
+        else{
+            QMessageBox::about(this, camera_id.c_str(), QString("rms fail") );
         }
     }
 }
+void MainWindow::rcgCalibStatus(int exitCode, QProcess::ExitStatus exitStatus){
+    QMessageBox::about(this, "MESSAGE", QString("for test...") );
+//    std::cout<<rgbdfile_tmp_ir<<std::endl;
+//    cv::FileStorage fs(rgbdfile_tmp_ir, FileStorage::READ);
+//    double rms;
+//    fs["avg_reprojection_error"] >> rms;
+//    if(rms<1.0)
+//        QMessageBox::about(this, camera_id.c_str(), QString("标定成功") );
+//    else{
+//        QMessageBox::about(this, camera_id.c_str(), QString("rms fail") );
+//    }
+}
 
-bool loadCameraParams(string file_name,Mat &cameraMatrix, Mat &distCoeffs)
-{
+bool loadCameraParams(string file_name,Mat &cameraMatrix, Mat &distCoeffs){
     FileStorage fs(file_name, FileStorage::READ);//这个名字就是你之前校正得到的yml文件
-
-    if(fs.isOpened())
-    {
+    if(fs.isOpened()){
         fs["camera_matrix"] >> cameraMatrix;
         fs["distortion_coefficients"] >> distCoeffs;
         return true;
-    }
-    else
-    {
+    }else{
         return false;
     }
 }
+
 cv::Point2d MainWindow::pixel2cam(const cv::Point2d &p, const cv::Mat &K){
     return cv::Point2d(
                 (p.x - K.at<double>(0,2)) / K.at<double>(0,0),
@@ -334,20 +338,6 @@ double MainWindow::plane_fitting(std::string left_img_file, std::string right_im
     //std::cout<<"Plane-fitting Average Error: "<< plane_fit_error <<std::endl;
 
     return 0;
-}
-
-void MainWindow::fisheyecalibStatus(int s){
-    std::string camera_id = binofile_tmp_e.substr( monofile_tmp.find_last_of("/") );
-    if(s == 0){
-        QMessageBox::about(this, camera_id.c_str(), tr("标定成功"));
-    }else if(s == -1){
-        QMessageBox::about(this, camera_id.c_str(), tr("标定失败"));
-    }else{
-        std::string content;
-        content = "删除第"+std::to_string(s)+"张图，并按“单校正图像”重试";
-        std::cout<<"err img: "<<s<<std::endl;
-        QMessageBox::about(this,tr("标定失败"), content.c_str());
-    }
 }
 Mat calibrator(string calib_file,Mat view)//需要校正处理的图片
 {
@@ -509,7 +499,7 @@ void MainWindow::accept(QString msg)
                 }
             }
         }
-    image = Mat2QImage(imgShow);
+        image = Mat2QImage(imgShow);
     }
     else if(ui->radioButton_IR->isChecked())
     {
@@ -541,18 +531,17 @@ void MainWindow::accept(QString msg)
                 }
             }
         }
-    image = Mat2QImage(imgShow);
+        image = Mat2QImage(imgShow);
     }
     else if(ui->radioButton_color_calib->isChecked())
     {
-       // thread.SetImageShowColor();
-
-       image = Mat2QImage(calibrator(color_calib_file_name,thread.get_color_img()));
+//        thread.SetImageShowColor();
+//        image = Mat2QImage(calibrator(color_calib_file_name,thread.get_color_img()));
     }
     else if(ui->radioButton_IR_calib->isChecked())
     {
-       // thread.SetImageShowIR();
-       image = Mat2QImage(calibrator(depth_calib_file_name,thread.get_ir_img()));
+//        thread.SetImageShowIR();
+//        image = Mat2QImage(calibrator(depth_calib_file_name,thread.get_ir_img()));
     }
     ui->label->setPixmap(QPixmap::fromImage(image));
 }
@@ -564,6 +553,21 @@ void MainWindow::monoaccept(){
         QImage qimg = Mat2QImage(img_corner);
         ui->label->setPixmap(QPixmap::fromImage(qimg));
         return;
+    }
+    QImage qimg = Mat2QImage(img);
+    ui->label->setPixmap(QPixmap::fromImage(qimg));
+}
+
+void MainWindow::rcgaccept(){
+    cv::Mat img;
+    if(ui->checkBox_show_check->isChecked()){
+        img = rechargecam.getImg(true);
+//        cv::Mat img_corner = monotrd.getMonoImgCorner();
+//        QImage qimg = Mat2QImage(img_corner);
+//        ui->label->setPixmap(QPixmap::fromImage(qimg));
+//        return;
+    }else{
+        img = rechargecam.getImg(false);
     }
     QImage qimg = Mat2QImage(img);
     ui->label->setPixmap(QPixmap::fromImage(qimg));
@@ -591,20 +595,15 @@ void MainWindow::on_pushButton_open_camera_clicked()
             binoExeString = string("./CETOOL_CALI_STEREO_CAL -w=10 -h=11 -s=30 ") +
                             string("-xxtrin=") + binofile_tmp_e + " " +
                             string("stereo_calib.xml");
-        }
-        if(monofile_tmp != "0"){
+        }if(monofile_tmp != "0"){
             monofile_tmp = "./CalibrationParam/" + monofile_tmp + ".yml";
-            fisheyecalib.setPathFile(
-                            string("./Mono"),
-                            monofile_tmp);
-        }
-        if(rgbdfile_tmp_ir != "0"){
+            fisheyecalib.setPathFile( string("./Mono"), monofile_tmp);
+        }if(rgbdfile_tmp_ir != "0"){
             rgbdfile_tmp_color = "./CalibrationParam/" + rgbdfile_tmp_ir + "C.yml";
             rgbdfile_tmp_ir = "./CalibrationParam/" + rgbdfile_tmp_ir + "R.yml";
             color_calib_file_name = rgbdfile_tmp_color;
             depth_calib_file_name = rgbdfile_tmp_ir;
-        }
-        if(binofile_tmp_e=="0" && monofile_tmp=="0" && rgbdfile_tmp_ir=="0"  ){
+        }if(binofile_tmp_e=="0" && monofile_tmp=="0" && rgbdfile_tmp_ir=="0"  ){
             QMessageBox::about(this,tr("Recognize: "), "found no device");
             return;
         }
@@ -628,8 +627,6 @@ void MainWindow::on_pushButton_open_camera_clicked()
                 printf("celog: cam capture success \r\n");
                 r = ce_cam_preprocess_init();
                 if(r < 0){
-                    void servoMoveForward(void);
-                    void servoMoveBackward(void);
                     printf("celog: cam preprocess error \r\n");
                 }else{
                     //ce_cam_showimg_init(plr);
@@ -638,18 +635,22 @@ void MainWindow::on_pushButton_open_camera_clicked()
             }
             ui->Tab1->setDisabled(true);
             binoTimer->start(100);
-        }else{		//rgbd camera
+        }else if(ui->radioButtonRechargeCamera->isChecked() ){	//auto-recharge camera
+            rechargecam.start();
+        }else{
             executeCMD("cp rgbdParam/* .");		//load calib-param
             on_radioButton_list1_clicked();
             ui->TabBino->setDisabled(true);
             thread.start();
         }
+
         ui->pushButton_open_camera->setText(tr("close_camera"));
         ui->pushButton_start_calib->setDisabled(false);	//you can only auto start after opening camera;
         ui->radioButton_IR_calib->setDisabled(true);
         ui->radioButton_color_calib->setDisabled(true);
         ui->radioButton_color->setDisabled(true);
         ui->radioButton_IR->setDisabled(true);
+        ui->radioButtonRechargeCamera->setDisabled(true);
     }else{		//close camera
         ui->pushButton_open_camera->setText(tr("open_camera"));
         if(ui->radioButton_IR_calib->isChecked()){
@@ -659,6 +660,8 @@ void MainWindow::on_pushButton_open_camera_clicked()
             ce_cam_preprocess_close();
             ce_cam_capture_calib_close();
             binoTimer->stop();
+        }else if(ui->radioButtonRechargeCamera->isChecked()){		//close binocular camera
+            rechargecam.stop();
         }else{
             thread.stop();
         }
@@ -668,6 +671,7 @@ void MainWindow::on_pushButton_open_camera_clicked()
         ui->radioButton_color_calib->setDisabled(false);
         ui->radioButton_color->setDisabled(false);
         ui->radioButton_IR->setDisabled(false);
+        ui->radioButtonRechargeCamera->setDisabled(false);
     }
 }
 
@@ -759,8 +763,7 @@ void MainWindow::on_pushButton_save_image_clicked()
 
 void MainWindow::on_pushButton_open_serial_clicked()
 {
-    if(ui->pushButton_open_serial->text()==tr("打开串口"))
-    {
+    if(ui->pushButton_open_serial->text()==tr("打开串口")){
         serial = new QSerialPort;//设置串口名
         serial->setPortName(ui->PortBox->currentText());//打开串口
         serial->open(QIODevice::ReadWrite);//设置波特率
@@ -777,9 +780,7 @@ void MainWindow::on_pushButton_open_serial_clicked()
         ui->pushButton_open_serial->setText(tr("关闭串口"));
         //连接信号槽
         QObject::connect(serial, &QSerialPort::readyRead, this, &MainWindow::Read_Data);
-    }
-    else
-    {
+    }else{
         //关闭串口
         serial->clear();
         serial->close();
@@ -814,38 +815,50 @@ void MainWindow::on_pushButton_read_image_list_clicked()
         qDebug()<<"monocular calibrating...";
         fisheyecalib.start();
     }
-    else if(ui->radioButton_color_calib->isChecked()){	//calibrate the  monocular
+    else if(ui->radioButton_color_calib->isChecked()){	//calibrate the  binocular
         qDebug()<<"binocular calibrating...";
         on_pushButton_start_calib_bino_clicked();
     }
-    //else if(ui->radioButton_select_color_calib->isChecked()){
     else if(ui->radioButton_color->isChecked()){	//calibrate the rgbd-color
-        /*******************/
-        //int grid_cols = imgShow.cols/REC_WIDTH;
-        //int grid_rows = imgShow.rows/REC_HEIGHT;
-        //for(auto pt:tempCorners){
-        //    incre_record(pt.x/grid_cols, pt.y/grid_rows);
-        //}
         qDebug()<<"rgbd-color calibrating...";
         read_all_file_name("./color_image/",Files);
         SaveStringList(color_image_list_file_name, Files);
         cmd = "./cpp-example-calibration -w "+width+" -h "+height+" -o " + color_calib_file_name + " " + color_image_list_file_name;
         executeCMD(cmd.c_str());
     }
-    //else if(ui->radioButton_select_ir_calib->isChecked()){
     else if(ui->radioButton_IR->isChecked()){	//calibrate the rgbd-ir
         qDebug()<<"rgbd-IR calibrating...";
         read_all_file_name("./IR_image/",Files);
         SaveStringList(depth_image_list_file_name, Files);
         cmd = "./cpp-example-calibration -w "+width+" -h "+height+" -o " + depth_calib_file_name + " " + depth_image_list_file_name;
-        executeCMD(cmd.c_str());
+//        executeCMD(cmd.c_str());		//dongfang
+        QProcess *ir_ps = new QProcess(this);
+
+        QObject::connect(ir_ps, SIGNAL(finished(int,QProcess::ExitStatus)),this, SLOT(rgbdCalibStatus(int, QProcess::ExitStatus)) );
+//		QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+//		env.insert("LD_LIBRARY_PATH","/usr/local/lib");
+//		ir_ps->setProcessEnvironment(env);
+        ir_ps->start(cmd.c_str());
     }
-//    QSound::play("./piano2.wav");
+    else if(ui->radioButtonRechargeCamera->isChecked()){	//calibrate the recharge camera
+        qDebug()<<"rcgCam calibrating...";
+        read_all_file_name("./imgRcg/",Files);
+        SaveStringList(depth_image_list_file_name, Files);
+        cmd = "./cpp-example-calibration -w "+width+" -h "+height+" -o " + depth_calib_file_name + " " + depth_image_list_file_name;
+
+        QProcess *rcg_ps = new QProcess(this);
+        QObject::connect(rcg_ps, SIGNAL(finished(int,QProcess::ExitStatus)),this, SLOT(rcgCalibStatus(int, QProcess::ExitStatus)) );
+//		QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+//		env.insert("LD_LIBRARY_PATH","/usr/local/lib");
+//		proc->setProcessEnvironment(env);
+        rcg_ps->start(cmd.c_str());
+    }
 }
 
 void MainWindow::on_pushButton_clean_clicked()
 {
     on_pushButton_clear_bino_clicked();
+    executeCMD("rm imgRcg/*");
     executeCMD("rm color_image/*");
     executeCMD("rm Mono/*");
     executeCMD("rm IR_image/*");
@@ -934,6 +947,7 @@ void MainWindow::servoInitStop(void){
 void MainWindow::handleTimeout()
 {
     static float x,y;
+    static int i=0;
 
     if(m_pTimer->isActive()){
         if(run_step == 0){
@@ -943,12 +957,11 @@ void MainWindow::handleTimeout()
                 ui->lcdNumber_set_pith->display(y);
                 ui->lcdNumber_set_yaw->display(x);
                 list_num++;
-            }
-            else{
+            }else{
                 if(position==0){
                     if(ui->radioButton_IR->isChecked()){	//RGBD-IR keep stillness;
                         run_step = 3;
-                        return;
+                        return ;
                     }
                     position = 1;
                     ui->radioButton_list2->setChecked(true);
@@ -957,8 +970,7 @@ void MainWindow::handleTimeout()
                     run_step = 0;
                     list_num = 0;
                     return ;
-                }
-                else if(position==1){
+                }else if(position==1){
                     position = 2;
                     ui->radioButton_list3->setChecked(true);
                     on_radioButton_list3_clicked();
@@ -966,60 +978,43 @@ void MainWindow::handleTimeout()
                     run_step = 0;
                     list_num = 0;
                     return ;
-                }
-                else if(position==2){
+                }else if(position==2){
                     position = 0;
                     on_radioButton_list1_clicked();
                     run_step = 3;
                     return ;
-                }
-                else{
+                }else{
                     assert(false);
                 }
             }
             set_pos(x,y);
             run_step = 1;
-        }
-        else if(run_step == 1)
-        {
-            if(abs(ui->lcdNumber_imu_x->value() - x)<2.0 && abs(ui->lcdnumber_imu_y->value() - y)<2.0)
-            {
+        }else if(run_step == 1){
+            if(abs(ui->lcdNumber_imu_x->value() - x)<2.0 && abs(ui->lcdnumber_imu_y->value() - y)<2.0){
                 run_step = 2;
             }
-        }
-        else if(run_step == 2)
-        {
+        }else if(run_step == 2){
             if(ui->radioButton_color_calib->isChecked()){	//save binocular image
                 on_pushButton_save_bino_clicked();
             }else if( ui->radioButton_IR_calib->isChecked()){	//save monocular image
                 monotrd.SaveImage();
+            }else if( ui->radioButton_IR_calib->isChecked()){	//save auto-recharge camera image
+                rechargecam.saveImg();
             }else{	//rgbd
                 thread.SetImageSave();
             }
             run_step = 0;
-        }
-        else if(run_step == 3){
+        }else if(run_step == 3){
             m_pTimer->stop();
             ui->pushButton_start_calib->setText(tr("自动开始"));
             run_step =0;
             list_num = 0;
-            if(ui->radioButton_color_calib->isChecked() ||  ui->radioButton_IR_calib->isChecked() ){	//save binocular image
+            //drive the chessboard back to initial position
+            if(ui->radioButton_color_calib->isChecked() ||  ui->radioButton_IR_calib->isChecked() ){
                 on_pushButton_init_clicked();
             }
-//            on_pushButton_init_clicked();
             on_radioButton_list1_clicked();
-            on_pushButton_read_image_list_clicked();
-//            if(ui->tabWidget->currentIndex()==0){
-//                if(ui->radioButton_IR_calib->isChecked()){
-//                    on_pushButton_read_image_list_clicked();
-//                }else{
-//                    on_pushButton_read_image_list_clicked();
-//                }
-//            }
-//            else if(ui->tabWidget->currentIndex()==1){
-//                //on_pushButton_start_calib_bino_clicked();
-//                on_pushButton_read_image_list_clicked();
-//            }
+            on_pushButton_read_image_list_clicked();	//start calibration
         }
     }
 }
@@ -1088,8 +1083,7 @@ void MainWindow::binoTimerHandler(){
 
 void MainWindow::on_pushButton_start_calib_clicked()
 {
-    if(ui->pushButton_start_calib->text()==tr("自动开始"))
-    {
+    if(ui->pushButton_start_calib->text()==tr("自动开始")){
         if(ui->pushButton_open_serial->text() == "打开串口"){
             QMessageBox::about(this,tr("串口: "), "请打开串口！");
             return;
@@ -1099,6 +1093,11 @@ void MainWindow::on_pushButton_start_calib_clicked()
             return;
         }
 
+        on_pushButton_clean_clicked();
+        m_pTimer = new QTimer(this);
+        connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
+        m_pTimer->start(CheckDurationMs);
+
         ui->pushButton_read_lists->setVisible(false);
         ui->pushButton_save_lists->setVisible(false);
         ui->Slider_x->setDisabled(true);
@@ -1107,22 +1106,14 @@ void MainWindow::on_pushButton_start_calib_clicked()
         ui->radioButton_list1->setDisabled(true);
         ui->radioButton_list2->setDisabled(true);
         ui->radioButton_list3->setDisabled(true);
-
-        on_pushButton_clean_clicked();
-        m_pTimer = new QTimer(this);
-        connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
-        m_pTimer->start(CheckDurationMs);
         ui->pushButton_start_calib->setText(tr("停止"));
-    }
-    else
-    {
+    }else{
         run_step = 0;
         list_num = 0;
         ui->pushButton_start_calib->setText(tr("自动开始"));
         m_pTimer->stop();
 //        checkTimer->stop();
     }
-
 }
 
 void MainWindow::on_pushButton_read_lists_clicked()
@@ -1254,11 +1245,11 @@ void MainWindow::on_pushButton_clear_record_clicked()
 
 void MainWindow::on_pushButton_chk_crn_distr_clicked()
 {
-    if(ui->radioButton_select_ir_calib->isChecked())
-        caculate_all_record(2);
-    if(ui->radioButton_select_color_calib->isChecked())
-        caculate_all_record(1);
-    ui->pushButton_chk_crn_distr->setDisabled(true);
+//    if(ui->radioButton_select_ir_calib->isChecked())
+//        caculate_all_record(2);
+//    if(ui->radioButton_select_color_calib->isChecked())
+//        caculate_all_record(1);
+//    ui->pushButton_chk_crn_distr->setDisabled(true);
 }
 
 void MainWindow::on_radioButton_IR_calib_clicked()

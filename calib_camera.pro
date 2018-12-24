@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     src/list_devices.cpp \
     src/celib_img_process.cpp \
     src/myWriteMySQL.cpp \
-    src/cetool_cali_stereo_capture_img.cpp
+    src/cetool_cali_stereo_capture_img.cpp \
+    src/rechargecam.cpp
 
 HEADERS  += mainwindow.h \
     communication.h \
@@ -49,7 +50,15 @@ HEADERS  += mainwindow.h \
     include/cedriver_global_config.h \
     include/devices_id.h \
     include/myWriteMySQL.h \
-    include/threadsafe_queue.h
+    include/threadsafe_queue.h	\
+    include/V4l2Access.h	\
+    include/V4l2Capture.h	\
+    include/V4l2Device.h	\
+    include/V4l2MmapDevice.h	\
+    include/V4l2Output.h	\
+    include/V4l2ReadWriteDevice.h \
+    include/rechargecam.h
+
 
 FORMS    += mainwindow.ui
 
@@ -75,9 +84,11 @@ INCLUDEPATH += include/openni2
 LIBS += -Linclude/openni2_redist/x64
 
 # LIBS += -lDevicesID	\
-LIBS +=-lastra_wrapper \
+LIBS += -lastra_wrapper \
         -lCEDRIVER_CAM_MONOCULAR \
         -lCEDRIVER_CONFIG_MONOCULAR \
+        -lv4l2wrapper	\
+        -llog4cpp
 
 LIBS += -lpcl_io -lpcl_common -lpcl_segmentation
 LIBS += -lOpenNI2 -lusb-1.0 -lGL -lGLU -lglut -lmysqlcppconn
@@ -88,18 +99,13 @@ LIBS += /usr/lib/x86_64-linux-gnu/libboost_system.so \
         /usr/lib/x86_64-linux-gnu/libboost_atomic.so
 
 LIBS += /usr/local/lib/libopencv_calib3d.so\
-#    /usr/local/lib/libopencv_contrib.so \
     /usr/local/lib/libopencv_core.so \
     /usr/local/lib/libopencv_features2d.so \
     /usr/local/lib/libopencv_flann.so \
-#    /usr/local/lib/libopencv_gpu.so \
     /usr/local/lib/libopencv_highgui.so \
     /usr/local/lib/libopencv_imgproc.so \
-#    /usr/local/lib/libopencv_legacy.so \
     /usr/local/lib/libopencv_ml.so \
-#    /usr/local/lib/libopencv_nonfree.so \
     /usr/local/lib/libopencv_objdetect.so \
-#    /usr/local/lib/libopencv_ocl.so \
     /usr/local/lib/libopencv_photo.so \
     /usr/local/lib/libopencv_stitching.so \
     /usr/local/lib/libopencv_superres.so \

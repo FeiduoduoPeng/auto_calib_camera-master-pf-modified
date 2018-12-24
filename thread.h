@@ -3,8 +3,8 @@
 
 #define MONO_CHESSBOARD
 
-#include<QThread>
-#include<QString>
+#include <QThread>
+#include <QString>
 #include <QMutex>
 #include <QSound>
 #include <QMessageBox>
@@ -107,7 +107,7 @@ public:
     void SaveImage(){
         static int suffix = 0;
         char imgName[100];
-        sprintf(imgName,"Mono/mono%d.jpg",suffix++);
+        sprintf(imgName, "Mono/mono%d.jpg",suffix++);
         mtx.lock();
         cv::imwrite(imgName, pf_img);
         mtx.unlock();
