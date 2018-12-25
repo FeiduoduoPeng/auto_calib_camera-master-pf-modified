@@ -37,6 +37,7 @@ class V4l2Access
 		int isReady()       { return m_device->isReady();       }
 		int start()         { return m_device->start();         }
 		int stop()          { return m_device->stop();          }
+		int setExposure(int exposuretime){ return m_device->configureExposure(exposuretime);	}
 
 	private:
 		V4l2Access(const V4l2Access&);

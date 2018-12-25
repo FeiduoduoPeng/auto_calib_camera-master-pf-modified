@@ -4,6 +4,7 @@ RechargeCam::RechargeCam(){
     runFlag = true;
     V4L2DeviceParameters param("/dev/video0", V4L2_PIX_FMT_YUYV, WIDTH, HEIGHT, FPS, 1);
     videoCapture = V4l2Capture::create(param, V4l2Access::IOTYPE_MMAP);
+    videoCapture->setExposure(500);
     buffer =  new char[WIDTH*HEIGHT*2];
     img = cv::Mat(cv::Size(HEIGHT,WIDTH), CV_8UC3);
 }

@@ -85,6 +85,7 @@ class V4l2Device
 		unsigned int getHeight()     { return m_height;     }
 		int getFd()         { return m_fd;         }
 		void queryFormat();	
+		int configureExposure(int exposuretime);
 
 	protected:
 		V4L2DeviceParameters m_params;

@@ -191,7 +191,9 @@ void MainWindow::rgbdCalibStatus(int exitCode, QProcess::ExitStatus exitStatus){
     }
 }
 void MainWindow::rcgCalibStatus(int exitCode, QProcess::ExitStatus exitStatus){
-    QMessageBox::about(this, "MESSAGE", QString("for test...") );
+    QMessageBox::about(this, "MESSAGE", QString("exitCode: %1").arg(exitCode) );
+    int temp = ui->lineEdit_RcgID->text().toInt() + 1;
+    ui->lineEdit_RcgID->setText(QString::number(temp));
 //    std::cout<<rgbdfile_tmp_ir<<std::endl;
 //    cv::FileStorage fs(rgbdfile_tmp_ir, FileStorage::READ);
 //    double rms;
@@ -244,9 +246,8 @@ double MainWindow::plane_fitting(std::string left_img_file, std::string right_im
     found = found && cv::findChessboardCorners(img_right_remap,cv::Size(10,11), corners_right);
     if(found){
         assert(corners_left.size() == corners_right.size());
-        //cv::drawChessboardCorners(img_left_remap, cv::Size(10,11), corners_left, true);
-        //cv::imshow("left: ", img_left_remap);
-        //cv::waitKey(200);
+    }else{
+        return 0;
     }
     for(int i=0; i<corners_left.size(); ++i){
         corners_left[i] = pixel2cam(corners_left[i], M1);
@@ -462,8 +463,6 @@ QImage  Mat2QImage(cv::Mat cvImg)
 
 void MainWindow::accept(QString msg)
 {
-   // qDebug()<<msg;
-    // 显示出深度图像
     QImage image;
     const int board_w = ui->spinBox_grid_width->value();
     const int board_h = ui->spinBox_grid_height->value();
@@ -603,11 +602,12 @@ void MainWindow::on_pushButton_open_camera_clicked()
             rgbdfile_tmp_ir = "./CalibrationParam/" + rgbdfile_tmp_ir + "R.yml";
             color_calib_file_name = rgbdfile_tmp_color;
             depth_calib_file_name = rgbdfile_tmp_ir;
-        }if(binofile_tmp_e=="0" && monofile_tmp=="0" && rgbdfile_tmp_ir=="0"  ){
+        }if(binofile_tmp_e=="0" && monofile_tmp=="0" && rgbdfile_tmp_ir=="0" && ui->lineEdit_RcgID->text().isEmpty()){	//TODO:此处打开充电摄像头可以被绕开
             QMessageBox::about(this,tr("Recognize: "), "found no device");
             return;
         }
         /**********obtain end**************/
+        ui->lineEdit_RcgID->setDisabled(true);
 
         if(ui->radioButton_IR_calib->isChecked()){	//monocular camera
             executeCMD("cp monoParam/* .");		//load calib-param
@@ -635,7 +635,7 @@ void MainWindow::on_pushButton_open_camera_clicked()
             }
             ui->Tab1->setDisabled(true);
             binoTimer->start(100);
-        }else if(ui->radioButtonRechargeCamera->isChecked() ){	//auto-recharge camera
+        }else if(ui->radioButtonRechargeCamera->isChecked()){	//auto-recharge camera
             rechargecam.start();
         }else{
             executeCMD("cp rgbdParam/* .");		//load calib-param
@@ -835,22 +835,22 @@ void MainWindow::on_pushButton_read_image_list_clicked()
         QProcess *ir_ps = new QProcess(this);
 
         QObject::connect(ir_ps, SIGNAL(finished(int,QProcess::ExitStatus)),this, SLOT(rgbdCalibStatus(int, QProcess::ExitStatus)) );
-//		QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-//		env.insert("LD_LIBRARY_PATH","/usr/local/lib");
-//		ir_ps->setProcessEnvironment(env);
         ir_ps->start(cmd.c_str());
     }
     else if(ui->radioButtonRechargeCamera->isChecked()){	//calibrate the recharge camera
         qDebug()<<"rcgCam calibrating...";
-        read_all_file_name("./imgRcg/",Files);
-        SaveStringList(depth_image_list_file_name, Files);
-        cmd = "./cpp-example-calibration -w "+width+" -h "+height+" -o " + depth_calib_file_name + " " + depth_image_list_file_name;
+        std::vector<std::string> files;
+        QString id = ui->lineEdit_RcgID->text();
+        if(id.isEmpty()){
+            QMessageBox::about(this,tr("Rcg"),tr("输入ID并重试"));
+            return;
+        }
+        read_all_file_name("./imgRcg/",files);
+        SaveStringList(depth_image_list_file_name, files);
+        cmd = "./cpp-example-calibration -w "+width+" -h "+height+" -o ./CalibrationParam/Rcg" + id.toStdString() + ".yml" + " " + depth_image_list_file_name;
 
         QProcess *rcg_ps = new QProcess(this);
         QObject::connect(rcg_ps, SIGNAL(finished(int,QProcess::ExitStatus)),this, SLOT(rcgCalibStatus(int, QProcess::ExitStatus)) );
-//		QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-//		env.insert("LD_LIBRARY_PATH","/usr/local/lib");
-//		proc->setProcessEnvironment(env);
         rcg_ps->start(cmd.c_str());
     }
 }
@@ -1262,33 +1262,7 @@ void MainWindow::on_tabWidget_tabBarClicked(int index)
 }
 
 void MainWindow::on_tabWidget_currentChanged(int index)
-{
-    //if(ui->tabWidget->currentIndex() == 1){
-    //    std::cout<<"disable"<<std::endl;
-    //    ui->pushButton->setDisabled(true);
-    //    ui->pushButton_save_lists->setDisabled(true);
-    //    ui->pushButton_read_lists->setDisabled(true);
-    //    ui->spinBox_grid_height->setDisabled(true);
-    //    ui->spinBox_grid_width->setDisabled(true);
-    //    ui->radioButton_color_calib->setDisabled(true);
-    //    ui->radioButton_IR_calib->setDisabled(true);
-    //    ui->radioButton_select_ir_calib->setDisabled(true);
-    //    ui->pushButton_save_image->setDisabled(true);
-    //    ui->radioButton_IR->setDisabled(true);
-    //}else{
-    //    std::cout<<"enable"<<std::endl;
-    //    ui->pushButton->setDisabled(false);
-    //    ui->pushButton_save_lists->setDisabled(false);
-    //    ui->pushButton_read_lists->setDisabled(false);
-    //    ui->spinBox_grid_height->setDisabled(false);
-    //    ui->spinBox_grid_width->setDisabled(false);
-    //    ui->radioButton_color_calib->setDisabled(false);
-    //    ui->radioButton_IR_calib->setDisabled(false);
-    //    ui->radioButton_select_ir_calib->setDisabled(false);
-    //    ui->pushButton_save_image->setDisabled(false);
-    //    ui->radioButton_IR->setDisabled(false);
-    //}
-}
+{}
 
 
 void MainWindow::on_pushButton_open_bino_clicked()
@@ -1357,8 +1331,7 @@ void MainWindow::on_pushButton_show_rectified_clicked()
      if( !fs.isOpened() ){
          printf("Failed to open file xxtrinsic.yml");
          matrix_rdy = false;
-     }
-     else{
+     }else{
          fs["M1"] >> M1;
          fs["D1"] >> D1;
          fs["M2"] >> M2;
