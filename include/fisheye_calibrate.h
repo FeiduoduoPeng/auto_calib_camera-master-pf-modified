@@ -12,7 +12,7 @@
 
 #define CORNER_WIDTH 10
 #define CORNER_HEIGHT 11
-#define squareSize 40
+#define squareSize 30
 
 
 int FisheyeCalibrate(std::string rootdirPath, std::string xxtrinsics);
