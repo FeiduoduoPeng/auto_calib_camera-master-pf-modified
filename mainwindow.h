@@ -112,7 +112,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Thread thread;
-    RechargeCam rechargecam;
+    RechargeCam *rechargecam;
     monoThread monotrd;
     fisheyeCalib fisheyecalib;
     QTimer *binoTimer;

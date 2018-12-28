@@ -2,6 +2,7 @@
 #define __RECHARGECAM_h__
 #include <iostream>
 #include <unistd.h>
+#include <chrono>
 
 #include <QThread>
 #include <QMutex>
@@ -33,10 +34,7 @@ public:
     virtual void run();
     virtual void stop(){
         runFlag = false;
-    }
-    void start(){
-        runFlag = true;
-        QThread::start();
+        delete videoCapture;
     }
 
 public:

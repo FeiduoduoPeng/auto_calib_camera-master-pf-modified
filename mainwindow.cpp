@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     servoTimer = new QTimer(this);
     servoInitTimer = new QTimer(this);
     checkTimer = new QTimer(this);
+    rechargecam = new RechargeCam;
     color_image_list_file_name = "color_image_list_file.yaml";
     depth_image_list_file_name = "depth_image_list_file.yaml";
 
@@ -60,10 +61,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_open_serial->setText(tr("打开串口"));
     ui->pushButton_open_camera->setText(tr("open_camera"));
 
+    QObject::connect(rechargecam, SIGNAL(send()), this, SLOT(rcgaccept()), Qt::BlockingQueuedConnection);
     QObject::connect(&thread, SIGNAL(send(QString)), this, SLOT(accept(QString)), Qt::BlockingQueuedConnection);
     QObject::connect(&fisheyecalib, SIGNAL(send(int)), this, SLOT(fisheyecalibStatus(int)) );
     QObject::connect(&monotrd, SIGNAL(send()), this, SLOT(monoaccept()), Qt::BlockingQueuedConnection);
-    QObject::connect(&rechargecam, SIGNAL(send()), this, SLOT(rcgaccept()), Qt::BlockingQueuedConnection);
     QObject::connect(binoTimer, SIGNAL(timeout()), this, SLOT(binoTimerHandler()));
     QObject::connect(servoTimer, SIGNAL(timeout()), this, SLOT(servoStop()));
     QObject::connect(servoInitTimer, SIGNAL(timeout()), this, SLOT(servoInitStop()));
@@ -181,6 +182,10 @@ void MainWindow::rgbdCalibStatus(int exitCode, QProcess::ExitStatus exitStatus){
     if(exitCode == 0){
         std::cout<<rgbdfile_tmp_ir<<std::endl;
         cv::FileStorage fs(rgbdfile_tmp_ir, FileStorage::READ);
+        if(!fs.isOpened()){
+            QMessageBox::about(this, camera_id.c_str(), QString("标定失败") );
+            return;
+        }
         double rms;
         fs["avg_reprojection_error"] >> rms;
         if(rms<1.0)
@@ -191,9 +196,25 @@ void MainWindow::rgbdCalibStatus(int exitCode, QProcess::ExitStatus exitStatus){
     }
 }
 void MainWindow::rcgCalibStatus(int exitCode, QProcess::ExitStatus exitStatus){
-    QMessageBox::about(this, "MESSAGE", QString("exitCode: %1").arg(exitCode) );
-    int temp = ui->lineEdit_RcgID->text().toInt() + 1;
-    ui->lineEdit_RcgID->setText(QString::number(temp));
+//    QMessageBox::about(this, "MESSAGE", QString("exitCode: %1").arg(exitCode) );
+    int rcgid = ui->lineEdit_RcgID->text().toInt();
+    if(exitCode == 0){
+        std::cout<<rgbdfile_tmp_ir<<std::endl;
+        cv::FileStorage fs("./CalibrationParam/Rcg"+std::to_string(rcgid)+".yml", FileStorage::READ);
+        if(!fs.isOpened()){
+            QMessageBox::about(this, QString::number(rcgid), QString("标定失败") );
+            return;
+        }
+        double rms;
+        fs["avg_reprojection_error"] >> rms;
+        if(rms<1.0){
+            QMessageBox::about(this, QString::number(rcgid), QString("标定成功") );
+//            int temp = ui->lineEdit_RcgID->text().toInt() + 1;
+            ui->lineEdit_RcgID->setText(QString::number(rcgid+1));
+        }else{
+            QMessageBox::about(this, QString::number(rcgid), QString("rms fail") );
+        }
+    }
 //    std::cout<<rgbdfile_tmp_ir<<std::endl;
 //    cv::FileStorage fs(rgbdfile_tmp_ir, FileStorage::READ);
 //    double rms;
@@ -390,7 +411,7 @@ void MainWindow::Read_Data()
     }
     for(char i=0;i<len;i++)
     {
-    Motor_DT_Data_Receive_Prepare((unsigned char )buf[i]);
+        Motor_DT_Data_Receive_Prepare((unsigned char )buf[i]);
     }
 }
 
@@ -560,13 +581,13 @@ void MainWindow::monoaccept(){
 void MainWindow::rcgaccept(){
     cv::Mat img;
     if(ui->checkBox_show_check->isChecked()){
-        img = rechargecam.getImg(true);
+        img = rechargecam->getImg(true);
 //        cv::Mat img_corner = monotrd.getMonoImgCorner();
 //        QImage qimg = Mat2QImage(img_corner);
 //        ui->label->setPixmap(QPixmap::fromImage(qimg));
 //        return;
     }else{
-        img = rechargecam.getImg(false);
+        img = rechargecam->getImg(false);
     }
     QImage qimg = Mat2QImage(img);
     ui->label->setPixmap(QPixmap::fromImage(qimg));
@@ -636,14 +657,18 @@ void MainWindow::on_pushButton_open_camera_clicked()
             ui->Tab1->setDisabled(true);
             binoTimer->start(100);
         }else if(ui->radioButtonRechargeCamera->isChecked()){	//auto-recharge camera
-            rechargecam.start();
+            executeCMD("cp rcgParam/* .");		//load calib-param
+            try{
+                rechargecam->start();
+            }catch(...){
+                QMessageBox::about(this, tr("No Cam: "), "插入自充摄像头");
+            }
         }else{
             executeCMD("cp rgbdParam/* .");		//load calib-param
             on_radioButton_list1_clicked();
             ui->TabBino->setDisabled(true);
             thread.start();
         }
-
         ui->pushButton_open_camera->setText(tr("close_camera"));
         ui->pushButton_start_calib->setDisabled(false);	//you can only auto start after opening camera;
         ui->radioButton_IR_calib->setDisabled(true);
@@ -660,8 +685,8 @@ void MainWindow::on_pushButton_open_camera_clicked()
             ce_cam_preprocess_close();
             ce_cam_capture_calib_close();
             binoTimer->stop();
-        }else if(ui->radioButtonRechargeCamera->isChecked()){		//close binocular camera
-            rechargecam.stop();
+        }else if(ui->radioButtonRechargeCamera->isChecked()){		//close auto-recharge camera
+            rechargecam->stop();
         }else{
             thread.stop();
         }
@@ -764,14 +789,14 @@ void MainWindow::on_pushButton_save_image_clicked()
 void MainWindow::on_pushButton_open_serial_clicked()
 {
     if(ui->pushButton_open_serial->text()==tr("打开串口")){
-        serial = new QSerialPort;//设置串口名
-        serial->setPortName(ui->PortBox->currentText());//打开串口
-        serial->open(QIODevice::ReadWrite);//设置波特率
-        serial->setBaudRate(ui->BaudBox->currentText().toInt());//设置数据位数
-        serial->setDataBits(QSerialPort::Data8);//设置奇偶校验
-        serial->setParity(QSerialPort::NoParity);//设置停止位
-        serial->setStopBits(QSerialPort::OneStop);//设置流控制
-        serial->setFlowControl(QSerialPort::NoFlowControl);
+        serial = new QSerialPort;
+        serial->setPortName(ui->PortBox->currentText());//设置串口名
+        serial->open(QIODevice::ReadWrite);//打开串口
+        serial->setBaudRate(ui->BaudBox->currentText().toInt());//设置波特率
+        serial->setDataBits(QSerialPort::Data8);//设置数据位数
+        serial->setParity(QSerialPort::NoParity);//设置奇偶校验
+        serial->setStopBits(QSerialPort::OneStop);//设置停止位
+        serial->setFlowControl(QSerialPort::NoFlowControl);//设置流控制
         //关闭设置菜单使能
         ui->PortBox->setEnabled(false);
         ui->BaudBox->setEnabled(false);
@@ -959,7 +984,7 @@ void MainWindow::handleTimeout()
                 list_num++;
             }else{
                 if(position==0){
-                    if(ui->radioButton_IR->isChecked()){	//RGBD-IR keep stillness;
+                    if(ui->radioButton_IR->isChecked() || ui->radioButtonRechargeCamera->isChecked() ){	//RGBD-IR keep stillness;
                         run_step = 3;
                         return ;
                     }
@@ -998,8 +1023,8 @@ void MainWindow::handleTimeout()
                 on_pushButton_save_bino_clicked();
             }else if( ui->radioButton_IR_calib->isChecked()){	//save monocular image
                 monotrd.SaveImage();
-            }else if( ui->radioButton_IR_calib->isChecked()){	//save auto-recharge camera image
-                rechargecam.saveImg();
+            }else if( ui->radioButtonRechargeCamera->isChecked()){	//save auto-recharge camera image
+                rechargecam->saveImg();
             }else{	//rgbd
                 thread.SetImageSave();
             }

@@ -221,7 +221,8 @@ static void saveCameraParams( const string& filename,
     if(filename.size()>30){
         myWriteMySQL(filename.substr(19,13), ss.str(), "rgbd_cam");
     }else{
-        myWriteMySQL("uuid=001", ss.str(), "rgbd_cam");
+        int pos = filename.find_first_of('.',10);
+        myWriteMySQL(filename.substr(19,pos-19), ss.str(), "rcg_cam");
     }
 
     if( !reprojErrs.empty() )
@@ -482,7 +483,8 @@ int main( int argc, char** argv )
         {
             case CHESSBOARD:
                 found = findChessboardCorners( view, boardSize, pointbuf,
-                    CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FAST_CHECK | CV_CALIB_CB_NORMALIZE_IMAGE);
+                    // CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FAST_CHECK | CV_CALIB_CB_NORMALIZE_IMAGE);
+                    CV_CALIB_CB_ADAPTIVE_THRESH );
                 break;
             case CIRCLES_GRID:
                 found = findCirclesGrid( view, boardSize, pointbuf );

@@ -28,12 +28,12 @@ Moto_Data_inf_TypeDef Moto_Data_inf;
 //Data_Exchange函数处理各种数据发送请求，比如想实现每5ms发送一次传感器数据至上位机，即在此函数内实现
 //此函数应由用户每1ms调用一次
 
-	static u8 senser_cnt 	= 10;
-    void Motor_DT_Data_Exchange(void)
-    {
-        static uint16_t cnt     = 0;
+static u8 senser_cnt 	= 10;
+void Motor_DT_Data_Exchange(void)
+{
+    static uint16_t cnt     = 0;
 	static u8 status_cnt 	= 15;
-	static u8 rcdata_cnt 	= 20;
+    static u8 rcdata_cnt 	= 20;
 	static u8 motopwm_cnt	= 20;
 	static u8 time_cnt		= 50;
 
@@ -156,8 +156,7 @@ void Motor_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
 		return;		//判断sum
     if(!(*(data_buf)==0xAA && *(data_buf+1)==0xAA))
 		return;		//判断帧头
-
-    if (*(data_buf + 2) ==0x14)
+    if (*(data_buf + 2) ==0x14)	//0x14以及之后的0x15等，是表示功能，具体详见stm32的驱动程序
     {
         float data[2];
         memcpy(&data, data_buf + 4,8);
@@ -168,7 +167,7 @@ void Motor_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
         float data[2];
         memcpy(&data, data_buf + 4,8);
         //if reach target point, recover the m_pTimer
-        if(data[0] ==1){
+        if(data[0] == 1){
             ReachFlag =true;
             std::cout<<"chessboard reach"<<std::endl;
         }
@@ -186,7 +185,7 @@ void Motor_DT_Data_Receive_Anl(u8 *data_buf,u8 num)
   * @brief  Motor_DT_Send_Struct 
   * @param  *Struct_Data  要发送的结构体
             length 结构体大小
-             function     功能字
+            function     功能字
   * @retval void
   */
 void Motor_DT_Send_Struct(void *Struct_Data,int length ,u8 function)
